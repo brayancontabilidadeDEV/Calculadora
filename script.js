@@ -695,6 +695,51 @@ function atualizarProgresso() {
         bar.style.width = `${progresso}%`;
     }
 }
+// ==================== FUNÇÕES PARA GRÁFICOS ====================
+function inicializarGraficos() {
+    if (window.gerenciadorGraficos && !window.gerenciadorGraficos.inicializado) {
+        window.gerenciadorGraficos.inicializarTodosGraficos();
+    }
+}
+
+function atualizarGraficosComDados() {
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+    }
+}
+
+// Adicione ao objeto window
+window.inicializarGraficos = inicializarGraficos;
+window.atualizarGraficosComDados = atualizarGraficosComDados;
+
+// Modifique a função calcularResultados para atualizar gráficos
+function calcularResultados() {
+    try {
+        // ... código existente ...
+        
+        // ATUALIZAR GRÁFICOS APÓS CÁLCULO
+        setTimeout(() => {
+            if (window.gerenciadorGraficos) {
+                window.gerenciadorGraficos.atualizarGraficoComposicao(
+                    preco, 
+                    dadosNegocio.custos.variavelUnitario, 
+                    dadosNegocio.custos.fixoUnitario, 
+                    100
+                );
+                
+                window.gerenciadorGraficos.atualizarGraficoDistribuicaoPreco(
+                    dadosNegocio.custos, 
+                    preco
+                );
+                
+                window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+            }
+        }, 300);
+        
+    } catch (error) {
+        console.error('Erro ao calcular resultados:', error);
+    }
+}
 
 function calcularTudo() {
     calcularCustos();
