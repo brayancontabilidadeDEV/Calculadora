@@ -1904,62 +1904,40 @@
                 </div>
             </div>
 
-            <!-- Tab 6: Gráficos Avançados -->
-            <div id="graficos" class="tab-content">
-                <div class="glass-card p-6">
-                    <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">📊 Gráficos Avançados & Visualizações</h2>
-                        <p class="text-gray-600 dark:text-gray-400">Visualize todos os dados do seu negócio de forma interativa</p>
-                    </div>
-                    
-                    <!-- Controles dos Gráficos -->
-                    <div class="mb-8 p-6 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-800 dark:to-slate-800 rounded-xl">
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">⚙️ Controles dos Gráficos</h3>
-                        
-                        <div class="grid md:grid-cols-3 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Tipo de Visualização
-                                </label>
-                                <select id="tipoVisualizacao" class="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800" onchange="atualizarGraficos()">
-                                    <option value="padrao">Padrão</option>
-                                    <option value="simples">Simplificado</option>
-                                    <option value="detalhado">Detalhado</option>
-                                    <option value="comparativo">Comparativo</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Mostrar Valores em
-                                </label>
-                                <div class="flex gap-4">
-                                    <label class="flex items-center">
-                                        <input type="radio" name="tipoValor" value="real" checked class="mr-2" onchange="atualizarGraficos()">
-                                        <span class="text-sm">R$ (Reais)</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" name="tipoValor" value="percentual" class="mr-2" onchange="atualizarGraficos()">
-                                        <span class="text-sm">% (Porcentagem)</span>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Ações
-                                </label>
-                                <div class="flex gap-2">
-                                    <button onclick="atualizarGraficos()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                        <i class="fas fa-sync mr-2"></i> Atualizar
-                                    </button>
-                                    <button onclick="exportarGraficos()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
-                                        <i class="fas fa-download mr-2"></i> Exportar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+           <!-- Substituir a seção de gráficos na Tab 6 por: -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Gráfico 1: Distribuição do Preço -->
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl">
+        <h3 class="font-bold text-gray-800 dark:text-white mb-4">🍰 Distribuição do Preço</h3>
+        <div class="chart-container-md">
+            <canvas id="graficoDistribuicaoPreco"></canvas>
+        </div>
+    </div>
+    
+    <!-- Gráfico 2: Comparação com Concorrência -->
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl">
+        <h3 class="font-bold text-gray-800 dark:text-white mb-4">🏆 Comparação com Concorrência</h3>
+        <div class="chart-container-md">
+            <canvas id="graficoComparacaoConcorrencia"></canvas>
+        </div>
+    </div>
+    
+    <!-- Gráfico 3: Evolução do Lucro -->
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl">
+        <h3 class="font-bold text-gray-800 dark:text-white mb-4">📈 Evolução do Lucro</h3>
+        <div class="chart-container-md">
+            <canvas id="graficoEvolucaoLucro"></canvas>
+        </div>
+    </div>
+    
+    <!-- Gráfico 4: Ponto de Equilíbrio -->
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl">
+        <h3 class="font-bold text-gray-800 dark:text-white mb-4">⚖️ Ponto de Equilíbrio</h3>
+        <div class="chart-container-md">
+            <canvas id="graficoPontoEquilibrio"></canvas>
+        </div>
+    </div>
+</div>
                     
                    <!-- Seção de Gráficos -->
 <section class="dashboard-section">
