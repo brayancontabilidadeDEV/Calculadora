@@ -1397,11 +1397,116 @@
                 <!-- ... -->
             </section>
 
-            <!-- Gráficos -->
-            <section id="graficos" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
-            </section>
+           <!-- Gráficos -->
+<section id="graficos" class="tab-content" hidden>
+    <div class="glass-card p-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">📊 Análise Gráfica Completa</h2>
+                <p class="text-gray-800 dark:text-gray-300">
+                    Visualize todos os dados do seu negócio através de gráficos interativos.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="exportarTodosGraficos()" 
+                        class="px-4 py-2 gradient-primary text-white rounded-lg font-medium hover-lift flex items-center gap-2">
+                    <i class="fas fa-download"></i>
+                    Exportar Todos
+                </button>
+                <button onclick="window.gerenciadorGraficos.atualizarCoresDarkMode()" 
+                        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Linha 1 de Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Composição de Preço -->
+            <div class="glass-card p-4">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🧩 Composição do Preço</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Como seu preço é formado (custo variável, fixo, impostos e lucro)
+                </p>
+                <div class="chart-container chart-container-md">
+                    <canvas id="graficoComposicaoPreco"></canvas>
+                </div>
+            </div>
+            
+            <!-- Distribuição de Preço -->
+            <div class="glass-card p-4">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📊 Distribuição do Preço</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Detalhamento de todos os componentes do custo
+                </p>
+                <div class="chart-container chart-container-md">
+                    <canvas id="graficoDistribuicaoPreco"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Linha 2 de Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Comparação com Concorrência -->
+            <div class="glass-card p-4">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏆 Comparação com Concorrência</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Seu preço vs concorrentes no mercado
+                </p>
+                <div class="chart-container chart-container-md">
+                    <canvas id="graficoComparacaoConcorrenciaGraficos"></canvas>
+                </div>
+            </div>
+            
+            <!-- Evolução do Lucro -->
+            <div class="glass-card p-4">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📈 Evolução do Lucro</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Lucro e faturamento ao longo do tempo
+                </p>
+                <div class="chart-container chart-container-md">
+                    <canvas id="graficoEvolucaoLucro"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Linha 3 de Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Ponto de Equilíbrio -->
+            <div class="glass-card p-4">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">⚖️ Ponto de Equilíbrio</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Quantidade necessária para cobrir custos
+                </p>
+                <div class="chart-container chart-container-md">
+                    <canvas id="graficoPontoEquilibrio"></canvas>
+                </div>
+            </div>
+            
+            <!-- Projeção de Faturamento -->
+            <div class="glass-card p-4">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🚀 Projeção de Faturamento</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Previsão de crescimento dos próximos meses
+                </p>
+                <div class="chart-container chart-container-md">
+                    <canvas id="graficoProjecaoFaturamento"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Última linha -->
+        <div class="glass-card p-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">💰 Projeção de Lucro</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                Expectativa de lucro nos próximos meses
+            </p>
+            <div class="chart-container chart-container-lg">
+                <canvas id="graficoProjecaoLucro"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
 
             <!-- Projeções -->
             <section id="projecoes" class="tab-content" hidden>
