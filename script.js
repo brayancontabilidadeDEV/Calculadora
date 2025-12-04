@@ -1277,6 +1277,77 @@ function atualizarProgresso() {
     if (progressoDados) progressoDados.textContent = `${progresso}%`;
     if (progressoBar) progressoBar.style.width = `${progresso}%`;
     if (progressoDadosBar) progressoDadosBar.style.width = `${progresso}%`;
+    // ==================== FUNÇÕES DE SINCRONIZAÇÃO DE GRÁFICOS ====================
+
+function sincronizarGraficosComDados() {
+    if (!window.gerenciadorGraficos) {
+        console.warn('Gerenciador de gráficos não inicializado');
+        return;
+    }
+
+    // Obter dados atuais
+    const custos = dadosNegocio.custos;
+    const resultados = dadosNegocio.resultados;
+    const preco = parseFloat(document.getElementById('precoVendaFinal').value) || 0;
+    
+    // Atualizar gráfico de composição
+    if (window.gerenciadorGraficos.graficos.composicaoPreco && custos && preco > 0) {
+        const custoVarUnit = custos.variavelUnitario || 0;
+        const custoFixoUnit = custos.fixoUnitario || 0;
+        const impostos = preco * 0.07; // 7% estimado
+        const lucro = preco - custoVarUnit - custoFixoUnit - impostos;
+        
+        window.gerenciadorGraficos.graficos.composicaoPreco.data.datasets[0].data = [
+            Math.max(custoVarUnit, 0),
+            Math.max(custoFixoUnit, 0),
+            Math.max(impostos, 0),
+            Math.max(lucro, 0)
+        ];
+        window.gerenciadorGraficos.graficos.composicaoPreco.update();
+    }
+    
+    // Atualizar gráfico de distribuição
+    if (window.gerenciadorGraficos.graficos.distribuicaoPreco && custos && preco > 0) {
+        const valores = [
+            custos.variavelUnitario || 15,
+            custos.fixoUnitario || 10,
+            preco * 0.07,
+            preco * 0.20, // Lucro estimado
+            preco * 0.05, // Marketing
+            preco * 0.03  // Outros
+        ];
+        
+        window.gerenciadorGraficos.graficos.distribuicaoPreco.data.datasets[0].data = valores;
+        window.gerenciadorGraficos.graficos.distribuicaoPreco.update();
+    }
+    
+    // Atualizar gráfico de comparação
+    if (window.gerenciadorGraficos.graficos.comparacaoConcorrencia && preco > 0) {
+        const precoMin = parseFloat(document.getElementById('precoMinConcorrencia').value) || 45;
+        const precoMedio = parseFloat(document.getElementById('precoMedioConcorrencia').value) || 60;
+        const precoMax = parseFloat(document.getElementById('precoMaxConcorrencia').value) || 80;
+        
+        window.gerenciadorGraficos.graficos.comparacaoConcorrencia.data.datasets[0].data = [
+            precoMin,
+            precoMedio,
+            precoMax * 0.9,
+            preco
+        ];
+        window.gerenciadorGraficos.graficos.comparacaoConcorrencia.update();
+    }
+}
+
+// Chamar sincronização após cálculos
+function calcularTudoCompleto() {
+    calcularCustos();
+    calcularResultados();
+    sincronizarGraficosComDados();
+    mostrarToast('Cálculos e gráficos atualizados!', 'success');
+}
+
+// Expor função globalmente
+window.sincronizarGraficosComDados = sincronizarGraficosComDados;
+window.calcularTudoCompleto = calcularTudoCompleto;
 }
 
 // Expor funções para uso global
