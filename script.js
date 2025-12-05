@@ -1,4 +1,15 @@
-// Aguarda o carregamento completo da página
+// NO INÍCIO DO script.js, APÓS AS VARIÁVEIS GLOBAIS
+// Garantir que dadosNegocio esteja acessível globalmente
+if (!window.dadosNegocio) {
+    window.dadosNegocio = dadosNegocio;
+}
+
+// Corrigir a função atualizarGraficoComposicao
+function atualizarGraficoComposicao(preco, custoVarUnit, custoFixoUnit, markup) {
+    if (window.gerenciadorGraficos && window.gerenciadorGraficos.atualizarGraficoComposicaoPreco) {
+        window.gerenciadorGraficos.atualizarGraficoComposicaoPreco(preco, custoVarUnit, custoFixoUnit, markup);
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Página carregada - iniciando...');
     
