@@ -1,4 +1,4 @@
-// graficos.js - Versão Corrigida e Funcional
+// graficos.js - Versão Corrigida e Sincronizada
 class GerenciadorGraficos {
     constructor() {
         this.graficos = {};
@@ -13,29 +13,27 @@ class GerenciadorGraficos {
             // Verificar se Chart.js está disponível
             if (typeof Chart === 'undefined') {
                 console.error('❌ Chart.js não está carregado!');
-                mostrarToast('Erro: Chart.js não carregado. Recarregue a página.', 'error');
+                this.mostrarToast('Erro: Chart.js não carregado. Recarregue a página.', 'error');
                 return;
             }
             
-            // Aguardar um pouco para garantir que o DOM está pronto
-            setTimeout(() => {
-                this.inicializarDashboard();
-                this.inicializarComposicaoPreco();
-                this.inicializarDistribuicaoPreco();
-                this.inicializarComparacaoConcorrencia();
-                this.inicializarEvolucaoLucro();
-                this.inicializarPontoEquilibrio();
-                this.inicializarProjecaoFaturamento();
-                this.inicializarProjecaoLucro();
-                
-                this.inicializado = true;
-                console.log('✅ Todos os gráficos inicializados com sucesso!');
-                mostrarToast('Gráficos prontos para uso!', 'success');
-            }, 100);
+            // Inicializar cada gráfico individualmente
+            this.inicializarDashboard();
+            this.inicializarComposicaoPreco();
+            this.inicializarDistribuicaoPreco();
+            this.inicializarComparacaoConcorrencia();
+            this.inicializarEvolucaoLucro();
+            this.inicializarPontoEquilibrio();
+            this.inicializarProjecaoFaturamento();
+            this.inicializarProjecaoLucro();
+            
+            this.inicializado = true;
+            console.log('✅ Todos os gráficos inicializados com sucesso!');
+            this.mostrarToast('Gráficos prontos para uso!', 'success');
             
         } catch (error) {
             console.error('❌ Erro ao inicializar gráficos:', error);
-            mostrarToast('Erro ao carregar gráficos', 'error');
+            this.mostrarToast('Erro ao carregar gráficos', 'error');
         }
     }
 
@@ -74,7 +72,11 @@ class GerenciadorGraficos {
 
     inicializarDashboard() {
         const ctx = this.getContext('dashGraficoResumo');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('Canvas do dashboard não encontrado, tentando novamente...');
+            setTimeout(() => this.inicializarDashboard(), 500);
+            return;
+        }
         
         this.destruirGrafico('dashboard');
         
@@ -82,82 +84,20 @@ class GerenciadorGraficos {
             this.graficos.dashboard = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4', 'Mês 5', 'Mês 6'],
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
                     datasets: [{
                         label: 'Faturamento Projetado',
                         data: [1500, 2200, 3000, 3500, 4200, 5000],
                         borderColor: 'rgb(59, 130, 246)',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 2,
-                        pointRadius: 4,
+                        borderWidth: 3,
+                        pointRadius: 5,
                         pointBackgroundColor: 'rgb(59, 130, 246)',
                         tension: 0.4,
                         fill: true
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: document.body.classList.contains('dark-mode') ? '#1f2937' : '#ffffff',
-                            titleColor: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
-                            bodyColor: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
-                            borderColor: document.body.classList.contains('dark-mode') ? '#374151' : '#e5e7eb',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += 'R$ ' + context.parsed.y.toLocaleString('pt-BR', {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    });
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280',
-                                callback: function(value) {
-                                    if (value >= 1000) {
-                                        return 'R$ ' + (value / 1000).toFixed(1) + 'k';
-                                    }
-                                    return 'R$ ' + value;
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280'
-                            }
-                        }
-                    }
-                }
+                options: this.getOpcoesGrafico('Faturamento Mensal (R$)')
             });
         } catch (error) {
             console.error('❌ Erro ao inicializar dashboard:', error);
@@ -166,7 +106,10 @@ class GerenciadorGraficos {
 
     inicializarComposicaoPreco() {
         const ctx = this.getContext('graficoComposicaoPreco');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarComposicaoPreco(), 500);
+            return;
+        }
         
         this.destruirGrafico('composicaoPreco');
         
@@ -190,41 +133,20 @@ class GerenciadorGraficos {
                             'rgb(16, 185, 129)'
                         ],
                         borderWidth: 2,
-                        hoverOffset: 8
+                        hoverOffset: 15
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '60%',
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 padding: 20,
                                 font: {
                                     size: 12
-                                },
-                                generateLabels: function(chart) {
-                                    const data = chart.data;
-                                    if (data.labels.length && data.datasets.length) {
-                                        return data.labels.map((label, i) => {
-                                            const value = data.datasets[0].data[i];
-                                            const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
-                                            const percentage = Math.round((value / total) * 100);
-                                            
-                                            return {
-                                                text: `${label}: ${percentage}%`,
-                                                fillStyle: data.datasets[0].backgroundColor[i],
-                                                strokeStyle: data.datasets[0].borderColor[i],
-                                                lineWidth: 1,
-                                                hidden: false,
-                                                index: i
-                                            };
-                                        });
-                                    }
-                                    return [];
                                 }
                             }
                         },
@@ -239,7 +161,8 @@ class GerenciadorGraficos {
                                 }
                             }
                         }
-                    }
+                    },
+                    cutout: '60%'
                 }
             });
         } catch (error) {
@@ -249,7 +172,10 @@ class GerenciadorGraficos {
 
     inicializarDistribuicaoPreco() {
         const ctx = this.getContext('graficoDistribuicaoPreco');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarDistribuicaoPreco(), 500);
+            return;
+        }
         
         this.destruirGrafico('distribuicaoPreco');
         
@@ -268,9 +194,9 @@ class GerenciadorGraficos {
                             'rgba(139, 92, 246, 0.8)',
                             'rgba(156, 163, 175, 0.8)'
                         ],
-                        borderColor: document.body.classList.contains('dark-mode') ? '#1f2937' : '#ffffff',
+                        borderColor: this.isDarkMode() ? '#1f2937' : '#ffffff',
                         borderWidth: 2,
-                        hoverOffset: 8
+                        hoverOffset: 15
                     }]
                 },
                 options: {
@@ -280,7 +206,7 @@ class GerenciadorGraficos {
                         legend: {
                             position: 'right',
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 padding: 15,
                                 font: {
                                     size: 11
@@ -308,7 +234,10 @@ class GerenciadorGraficos {
 
     inicializarComparacaoConcorrencia() {
         const ctx = this.getContext('graficoComparacaoConcorrenciaGraficos');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarComparacaoConcorrencia(), 500);
+            return;
+        }
         
         this.destruirGrafico('comparacaoConcorrencia');
         
@@ -333,7 +262,7 @@ class GerenciadorGraficos {
                             'rgb(16, 185, 129)'
                         ],
                         borderWidth: 2,
-                        borderRadius: 4
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -357,17 +286,17 @@ class GerenciadorGraficos {
                             title: {
                                 display: true,
                                 text: 'Preço (R$)',
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 font: {
                                     size: 12,
                                     weight: 'bold'
                                 }
                             },
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                color: this.getCorGrid()
                             },
                             ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280',
+                                color: this.getCorTexto(),
                                 callback: function(value) {
                                     return 'R$ ' + value.toFixed(2);
                                 }
@@ -375,10 +304,10 @@ class GerenciadorGraficos {
                         },
                         x: {
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                color: this.getCorGrid()
                             },
                             ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280',
+                                color: this.getCorTexto(),
                                 font: {
                                     size: 11
                                 }
@@ -394,7 +323,10 @@ class GerenciadorGraficos {
 
     inicializarEvolucaoLucro() {
         const ctx = this.getContext('graficoEvolucaoLucro');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarEvolucaoLucro(), 500);
+            return;
+        }
         
         this.destruirGrafico('evolucaoLucro');
         
@@ -412,7 +344,7 @@ class GerenciadorGraficos {
                             borderWidth: 3,
                             tension: 0.3,
                             fill: true,
-                            pointRadius: 4,
+                            pointRadius: 5,
                             pointBackgroundColor: 'rgb(16, 185, 129)'
                         },
                         {
@@ -423,69 +355,12 @@ class GerenciadorGraficos {
                             borderWidth: 3,
                             tension: 0.3,
                             fill: true,
-                            pointRadius: 4,
+                            pointRadius: 5,
                             pointBackgroundColor: 'rgb(59, 130, 246)'
                         }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += 'R$ ' + context.parsed.y.toLocaleString('pt-BR');
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280',
-                                callback: function(value) {
-                                    if (value >= 1000) {
-                                        return 'R$ ' + (value / 1000).toFixed(1) + 'k';
-                                    }
-                                    return 'R$ ' + value;
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280'
-                            }
-                        }
-                    }
-                }
+                options: this.getOpcoesGraficoMultiplo('Valor (R$)')
             });
         } catch (error) {
             console.error('❌ Erro ao inicializar evolução do lucro:', error);
@@ -494,7 +369,10 @@ class GerenciadorGraficos {
 
     inicializarPontoEquilibrio() {
         const ctx = this.getContext('graficoPontoEquilibrio');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarPontoEquilibrio(), 500);
+            return;
+        }
         
         this.destruirGrafico('pontoEquilibrio');
         
@@ -531,7 +409,7 @@ class GerenciadorGraficos {
                         legend: {
                             position: 'top',
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 font: {
                                     size: 12
                                 }
@@ -556,34 +434,34 @@ class GerenciadorGraficos {
                             title: {
                                 display: true,
                                 text: 'Valor (R$)',
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 font: {
                                     size: 12,
                                     weight: 'bold'
                                 }
                             },
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                color: this.getCorGrid()
                             },
                             ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280'
+                                color: this.getCorTexto()
                             }
                         },
                         x: {
                             title: {
                                 display: true,
                                 text: 'Quantidade Vendida',
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 font: {
                                     size: 12,
                                     weight: 'bold'
                                 }
                             },
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                color: this.getCorGrid()
                             },
                             ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280'
+                                color: this.getCorTexto()
                             }
                         }
                     }
@@ -596,7 +474,10 @@ class GerenciadorGraficos {
 
     inicializarProjecaoFaturamento() {
         const ctx = this.getContext('graficoProjecaoFaturamento');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarProjecaoFaturamento(), 500);
+            return;
+        }
         
         this.destruirGrafico('projecaoFaturamento');
         
@@ -613,62 +494,11 @@ class GerenciadorGraficos {
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 4,
+                        pointRadius: 5,
                         pointBackgroundColor: 'rgb(59, 130, 246)'
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += 'R$ ' + context.parsed.y.toLocaleString('pt-BR');
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280',
-                                callback: function(value) {
-                                    if (value >= 1000) {
-                                        return 'R$ ' + (value / 1000).toFixed(1) + 'k';
-                                    }
-                                    return 'R$ ' + value;
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280'
-                            }
-                        }
-                    }
-                }
+                options: this.getOpcoesGrafico('Faturamento (R$)')
             });
         } catch (error) {
             console.error('❌ Erro ao inicializar projeção de faturamento:', error);
@@ -677,7 +507,10 @@ class GerenciadorGraficos {
 
     inicializarProjecaoLucro() {
         const ctx = this.getContext('graficoProjecaoLucro');
-        if (!ctx) return;
+        if (!ctx) {
+            setTimeout(() => this.inicializarProjecaoLucro(), 500);
+            return;
+        }
         
         this.destruirGrafico('projecaoLucro');
         
@@ -692,7 +525,7 @@ class GerenciadorGraficos {
                         backgroundColor: 'rgba(16, 185, 129, 0.7)',
                         borderColor: 'rgb(16, 185, 129)',
                         borderWidth: 2,
-                        borderRadius: 4
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -702,7 +535,7 @@ class GerenciadorGraficos {
                         legend: {
                             position: 'top',
                             labels: {
-                                color: document.body.classList.contains('dark-mode') ? '#f3f4f6' : '#111827',
+                                color: this.getCorTexto(),
                                 font: {
                                     size: 12
                                 }
@@ -720,10 +553,10 @@ class GerenciadorGraficos {
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                color: this.getCorGrid()
                             },
                             ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280',
+                                color: this.getCorTexto(),
                                 callback: function(value) {
                                     if (value >= 1000) {
                                         return 'R$ ' + (value / 1000).toFixed(1) + 'k';
@@ -734,10 +567,10 @@ class GerenciadorGraficos {
                         },
                         x: {
                             grid: {
-                                color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                                color: this.getCorGrid()
                             },
                             ticks: {
-                                color: document.body.classList.contains('dark-mode') ? '#9ca3af' : '#6b7280'
+                                color: this.getCorTexto()
                             }
                         }
                     }
@@ -748,6 +581,7 @@ class GerenciadorGraficos {
         }
     }
 
+    // ==================== MÉTODOS DE ATUALIZAÇÃO ====================
     atualizarGraficoComposicao(preco, custoVarUnit, custoFixoUnit, markup) {
         if (!this.graficos.composicaoPreco) return;
         
@@ -813,14 +647,14 @@ class GerenciadorGraficos {
     atualizarProjecoes(meses, receitas, lucros) {
         try {
             if (this.graficos.projecaoFaturamento && receitas) {
-                this.graficos.projecaoFaturamento.data.labels = meses;
-                this.graficos.projecaoFaturamento.data.datasets[0].data = receitas;
+                this.graficos.projecaoFaturamento.data.labels = meses.slice(0, 6);
+                this.graficos.projecaoFaturamento.data.datasets[0].data = receitas.slice(0, 6);
                 this.graficos.projecaoFaturamento.update('none');
             }
             
             if (this.graficos.projecaoLucro && lucros) {
-                this.graficos.projecaoLucro.data.labels = meses;
-                this.graficos.projecaoLucro.data.datasets[0].data = lucros;
+                this.graficos.projecaoLucro.data.labels = meses.slice(0, 6);
+                this.graficos.projecaoLucro.data.datasets[0].data = lucros.slice(0, 6);
                 this.graficos.projecaoLucro.update('none');
             }
             
@@ -892,6 +726,98 @@ class GerenciadorGraficos {
         }
     }
 
+    // ==================== UTILITÁRIOS ====================
+    getOpcoesGrafico(tituloY) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: this.getCorTexto(),
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += 'R$ ' + context.parsed.y.toLocaleString('pt-BR');
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: this.getCorGrid()
+                    },
+                    ticks: {
+                        color: this.getCorTexto(),
+                        callback: function(value) {
+                            if (value >= 1000) {
+                                return 'R$ ' + (value / 1000).toFixed(1) + 'k';
+                            }
+                            return 'R$ ' + value;
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        color: this.getCorGrid()
+                    },
+                    ticks: {
+                        color: this.getCorTexto()
+                    }
+                }
+            }
+        };
+    }
+
+    getOpcoesGraficoMultiplo(tituloY) {
+        const opcoes = this.getOpcoesGrafico(tituloY);
+        opcoes.interaction = {
+            mode: 'index',
+            intersect: false
+        };
+        return opcoes;
+    }
+
+    isDarkMode() {
+        return document.body.classList.contains('dark-mode');
+    }
+
+    getCorTexto() {
+        return this.isDarkMode() ? '#f3f4f6' : '#111827';
+    }
+
+    getCorGrid() {
+        return this.isDarkMode() ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    }
+
+    atualizarCoresDarkMode() {
+        try {
+            Object.values(this.graficos).forEach(grafico => {
+                if (grafico && grafico.options) {
+                    grafico.update('none');
+                }
+            });
+            
+            console.log('🎨 Cores do dark mode atualizadas');
+        } catch (error) {
+            console.error('❌ Erro ao atualizar cores do dark mode:', error);
+        }
+    }
+
+    // ==================== EXPORTAÇÃO ====================
     exportarGraficoParaImagem(idGrafico, nomeArquivo) {
         const canvas = document.getElementById(idGrafico);
         if (!canvas) {
@@ -938,99 +864,45 @@ class GerenciadorGraficos {
         // Mostrar resultado
         setTimeout(() => {
             if (exportados > 0) {
-                mostrarToast(`${exportados} gráficos exportados com sucesso!`, 'success');
+                this.mostrarToast(`${exportados} gráficos exportados com sucesso!`, 'success');
             } else {
-                mostrarToast('Nenhum gráfico exportado', 'warning');
+                this.mostrarToast('Nenhum gráfico exportado', 'warning');
             }
         }, graficosIds.length * 500 + 1000);
     }
 
-    atualizarCoresDarkMode() {
-        try {
-            Object.values(this.graficos).forEach(grafico => {
-                if (grafico && grafico.options) {
-                    const isDark = document.body.classList.contains('dark-mode');
-                    
-                    // Atualizar cores das escalas
-                    if (grafico.options.scales) {
-                        Object.values(grafico.options.scales).forEach(scale => {
-                            if (scale.grid) {
-                                scale.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                            }
-                            if (scale.ticks) {
-                                scale.ticks.color = isDark ? '#9ca3af' : '#6b7280';
-                            }
-                            if (scale.title && scale.title.color) {
-                                scale.title.color = isDark ? '#f3f4f6' : '#111827';
-                            }
-                        });
-                    }
-                    
-                    // Atualizar cores da legenda
-                    if (grafico.options.plugins?.legend?.labels) {
-                        grafico.options.plugins.legend.labels.color = isDark ? '#f3f4f6' : '#111827';
-                    }
-                    
-                    // Atualizar cores do tooltip
-                    if (grafico.options.plugins?.tooltip) {
-                        grafico.options.plugins.tooltip.backgroundColor = isDark ? '#1f2937' : '#ffffff';
-                        grafico.options.plugins.tooltip.titleColor = isDark ? '#f3f4f6' : '#111827';
-                        grafico.options.plugins.tooltip.bodyColor = isDark ? '#f3f4f6' : '#111827';
-                        grafico.options.plugins.tooltip.borderColor = isDark ? '#374151' : '#e5e7eb';
-                    }
-                    
-                    grafico.update('none');
-                }
-            });
-            
-            console.log('🎨 Cores do dark mode atualizadas');
-        } catch (error) {
-            console.error('❌ Erro ao atualizar cores do dark mode:', error);
+    mostrarToast(mensagem, tipo = 'info') {
+        // Usar a função global se existir
+        if (typeof window.mostrarToast === 'function') {
+            window.mostrarToast(mensagem, tipo);
+        } else {
+            // Fallback local
+            console.log(`${tipo.toUpperCase()}: ${mensagem}`);
         }
     }
 }
 
-// ==================== FUNÇÕES GLOBAIS ====================
+// ==================== INICIALIZAÇÃO GLOBAL ====================
 window.gerenciadorGraficos = new GerenciadorGraficos();
 
-// Função auxiliar global
-window.mostrarToast = function(mensagem, tipo = 'info') {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    
-    const cores = {
-        'success': 'bg-green-600',
-        'error': 'bg-red-600',
-        'warning': 'bg-yellow-600',
-        'info': 'bg-blue-600'
-    };
-    
-    toast.className = `toast ${cores[tipo] || 'bg-blue-600'}`;
-    toast.textContent = mensagem;
-    toast.style.display = 'block';
-    
-    setTimeout(() => {
-        toast.style.display = 'none';
-    }, 3000);
-};
-
-// ==================== INICIALIZAÇÃO ====================
+// Inicializar quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM carregado - Inicializando gráficos...');
     
     // Verificar se Chart.js está disponível
     if (typeof Chart === 'undefined') {
         console.error('❌ Chart.js não carregado!');
-        mostrarToast('Erro: Chart.js não encontrado. Recarregue a página.', 'error');
         return;
     }
     
     console.log('✅ Chart.js versão:', Chart.version);
     
-    // Inicializar gráficos após um pequeno delay para garantir que todos os elementos estão carregados
+    // Inicializar gráficos após um pequeno delay
     setTimeout(() => {
-        window.gerenciadorGraficos.inicializarTodosGraficos();
-    }, 500);
+        if (window.gerenciadorGraficos && !window.gerenciadorGraficos.inicializado) {
+            window.gerenciadorGraficos.inicializarTodosGraficos();
+        }
+    }, 1000);
     
     // Adicionar listener para dark mode
     document.addEventListener('darkModeChanged', function() {
@@ -1047,6 +919,8 @@ window.exportarTodosGraficos = function() {
     if (window.gerenciadorGraficos) {
         window.gerenciadorGraficos.exportarTodosGraficos();
     } else {
-        mostrarToast('Gerenciador de gráficos não inicializado', 'error');
+        if (typeof window.mostrarToast === 'function') {
+            window.mostrarToast('Gerenciador de gráficos não inicializado', 'error');
+        }
     }
 };
