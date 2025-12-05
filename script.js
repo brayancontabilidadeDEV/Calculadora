@@ -1,14 +1,16 @@
 // ==================== VARIÁVEIS GLOBAIS ====================
 
-// Garantir que dadosNegocio esteja acessível globalmente
-window.dadosNegocio = {
-    empresa: {},
-    produto: {},
-    custos: {},
-    precificacao: {},
-    mercado: {},
-    resultados: {}
-};
+// Garantir que dadosNegocio esteja acessível globalmente (CORRIGIDO: 'dadosMegocio' estava errado)
+if (!window.dadosNegocio) {
+    window.dadosNegocio = {
+        empresa: {},
+        produto: {},
+        custos: {},
+        precificacao: {},
+        mercado: {},
+        resultados: {}
+    };
+}
 
 // Atalho para acesso interno
 let dadosNegocio = window.dadosNegocio;
@@ -24,19 +26,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Verificar se Chart.js foi carregado
     if (typeof Chart === 'undefined') {
         console.error('Chart.js não foi carregado!');
+        mostrarAlertaErro('Chart.js não foi carregado. Recarregue a página.');
         return;
     }
     
     console.log('Chart.js carregado com sucesso! Versão:', Chart.version);
     
-    // Verificar se GerenciadorGraficos foi carregado
-    if (typeof GerenciadorGraficos === 'undefined') {
-        console.error('GerenciadorGraficos não foi carregado! Verifique se graficos.js está incluído.');
-        return;
-    }
-    
     // Inicializar gerenciador de gráficos
     try {
+        if (typeof GerenciadorGraficos === 'undefined') {
+            console.error('GerenciadorGraficos não foi carregado!');
+            // Vamos definir a classe aqui mesmo
+            definirGerenciadorGraficos();
+        }
+        
         window.gerenciadorGraficos = new GerenciadorGraficos();
         window.gerenciadorGraficos.inicializarGraficos();
         console.log('Gerenciador de gráficos inicializado com sucesso!');
@@ -61,6 +64,289 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Inicialização completa!');
 });
+
+function definirGerenciadorGraficos() {
+    // ==================== GERENCIADOR DE GRÁFICOS ====================
+    class GerenciadorGraficos {
+        constructor() {
+            this.graficos = {};
+            this.cores = {
+                primaria: '#4F46E5',
+                secundaria: '#10B981',
+                terciaria: '#F59E0B',
+                perigo: '#EF4444',
+                info: '#3B82F6',
+                custos: ['#4F46E5', '#7C3AED', '#8B5CF6', '#A78BFA', '#C4B5FD'],
+                receita: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
+                mercado: ['#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A']
+            };
+        }
+
+        inicializarGraficos() {
+            console.log('🔄 Inicializando gráficos...');
+            
+            try {
+                // Inicializar gráficos de dashboard
+                this.inicializarGraficosDashboard();
+                
+                console.log('✅ Gráficos inicializados com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar gráficos:', error);
+            }
+        }
+
+        inicializarGraficosDashboard() {
+            // 1. Gráfico de Distribuição de Preço
+            const ctxDistribuicao = document.getElementById('graficoDistribuicaoPreco');
+            if (ctxDistribuicao) {
+                this.graficos.distribuicaoPreco = new Chart(ctxDistribuicao, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Custo Variável', 'Custo Fixo', 'Lucro'],
+                        datasets: [{
+                            data: [40, 30, 30],
+                            backgroundColor: [
+                                this.cores.custos[0],
+                                this.cores.custos[1],
+                                this.cores.receita[0]
+                            ],
+                            borderWidth: 1,
+                            borderColor: '#1F2937'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#6B7280',
+                                    padding: 20,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += 'R$ ' + context.raw.toFixed(2);
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Gráfico de Composição do Preço (Barra)
+            const ctxComposicao = document.getElementById('graficoComposicaoPreco');
+            if (ctxComposicao) {
+                this.graficos.composicaoPreco = new Chart(ctxComposicao, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Custo Variável', 'Custo Fixo', 'Impostos/Taxas', 'Lucro'],
+                        datasets: [{
+                            label: 'Valor (R$)',
+                            data: [25, 15, 10, 50],
+                            backgroundColor: [
+                                this.cores.custos[0],
+                                this.cores.custos[1],
+                                this.cores.perigo,
+                                this.cores.receita[0]
+                            ],
+                            borderWidth: 1,
+                            borderColor: '#374151'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `R$ ${context.raw.toFixed(2)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value;
+                                    },
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#6B7280',
+                                    maxRotation: 45
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. Gráfico de Resultados Financeiros
+            const ctxResultados = document.getElementById('graficoResultadosFinanceiros');
+            if (ctxResultados) {
+                this.graficos.resultadosFinanceiros = new Chart(ctxResultados, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Receita', 'Custos', 'Lucro'],
+                        datasets: [{
+                            label: 'Valor Mensal (R$)',
+                            data: [5000, 3500, 1500],
+                            backgroundColor: [
+                                this.cores.receita[0],
+                                this.cores.perigo,
+                                this.cores.primaria
+                            ],
+                            borderWidth: 1,
+                            borderColor: '#374151'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `R$ ${context.raw.toLocaleString('pt-BR')}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value.toLocaleString('pt-BR');
+                                    },
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        atualizarGraficoDistribuicaoPreco(dadosCustos, precoVenda) {
+            if (!this.graficos.distribuicaoPreco || !dadosCustos || !precoVenda) return;
+            
+            const custoVariavel = dadosCustos.variavelUnitario || 0;
+            const custoFixoUnit = dadosCustos.fixoUnitario || 0;
+            const lucro = Math.max(0, precoVenda - (custoVariavel + custoFixoUnit));
+            
+            this.graficos.distribuicaoPreco.data.datasets[0].data = [
+                custoVariavel,
+                custoFixoUnit,
+                lucro
+            ];
+            
+            this.graficos.distribuicaoPreco.update();
+        }
+
+        atualizarGraficoComposicaoPreco(precoTotal, custoVariavel, custoFixo) {
+            if (!this.graficos.composicaoPreco || !precoTotal) return;
+            
+            // Calcular impostos e taxas (estimado em 15%)
+            const impostosTaxas = precoTotal * 0.15;
+            const lucro = Math.max(0, precoTotal - (custoVariavel + custoFixo + impostosTaxas));
+            
+            this.graficos.composicaoPreco.data.datasets[0].data = [
+                custoVariavel,
+                custoFixo,
+                impostosTaxas,
+                lucro
+            ];
+            
+            this.graficos.composicaoPreco.update();
+        }
+
+        atualizarGraficoResultados(dadosResultados) {
+            if (!this.graficos.resultadosFinanceiros || !dadosResultados) return;
+            
+            this.graficos.resultadosFinanceiros.data.datasets[0].data = [
+                dadosResultados.receitaMensal || 0,
+                dadosResultados.custoTotalMensal || 0,
+                dadosResultados.lucroMensal || 0
+            ];
+            
+            this.graficos.resultadosFinanceiros.update();
+        }
+
+        atualizarTodosGraficosComDados() {
+            console.log('🔄 Atualizando todos os gráficos com dados atuais...');
+            
+            try {
+                // Obter dados atuais
+                const dadosNegocio = window.dadosNegocio || {};
+                const custos = dadosNegocio.custos || {};
+                const resultados = dadosNegocio.resultados || {};
+                
+                const precoVenda = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
+                
+                // Atualizar gráficos individuais
+                if (custos.totalUnitario && precoVenda) {
+                    this.atualizarGraficoDistribuicaoPreco(custos, precoVenda);
+                    this.atualizarGraficoComposicaoPreco(
+                        precoVenda,
+                        custos.variavelUnitario || 0,
+                        custos.fixoUnitario || 0
+                    );
+                }
+                
+                if (resultados.lucroMensal) {
+                    this.atualizarGraficoResultados(resultados);
+                }
+                
+                console.log('✅ Gráficos atualizados com dados atuais!');
+            } catch (error) {
+                console.error('❌ Erro ao atualizar gráficos:', error);
+            }
+        }
+    }
+
+    window.GerenciadorGraficos = GerenciadorGraficos;
+}
 
 // ==================== FUNÇÕES DE NAVEGAÇÃO ====================
 
@@ -183,6 +469,8 @@ function voltarPassoDados() {
 // ==================== FUNÇÕES DA TAB CUSTOS ====================
 
 function calcularCustos() {
+    console.log('Calculando custos...');
+    
     // Custos variáveis por unidade
     const materiaPrima = parseFloat(document.getElementById('materiaPrima')?.value) || 0;
     const embalagem = parseFloat(document.getElementById('embalagem')?.value) || 0;
@@ -215,7 +503,7 @@ function calcularCustos() {
     const custoVariavelUnitario = materiaPrima + embalagem + frete;
     const custoFixoMensal = aluguel + salarios + contas + marketing + das + manutencao + outrosFixos + 
                            softwareGestao + softwareDesign + softwareMarketing + softwareOutros;
-    const custoFixoUnitario = custoFixoMensal / qtdMensal;
+    const custoFixoUnitario = qtdMensal > 0 ? custoFixoMensal / qtdMensal : 0;
     const custoTotalUnitario = custoVariavelUnitario + custoFixoUnitario;
     const custoTotalMensal = custoTotalUnitario * qtdMensal;
     
@@ -265,14 +553,19 @@ function calcularCustos() {
         qtdMensal: qtdMensal
     };
     
-    // Atualizar precificação
-    atualizarPrecificacao();
+    // Atualizar precificação - CORRIGIDO: atualizarPrecificacao agora está definida
+    if (typeof atualizarPrecificacao === 'function') {
+        atualizarPrecificacao();
+    }
     
     // Atualizar gráfico de distribuição se disponível
     if (window.gerenciadorGraficos) {
-        const preco = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
+        const preco = parseFloat(document.getElementById('precoVendaFinal')?.value) || 
+                     custoTotalUnitario * (1 + markupSugerido/100);
         window.gerenciadorGraficos.atualizarGraficoDistribuicaoPreco(dadosNegocio.custos, preco);
     }
+    
+    return dadosNegocio.custos;
 }
 
 function sugerirCustosPorSetor() {
@@ -290,7 +583,8 @@ function sugerirCustosPorSetor() {
             frete: 5.00,
             aluguel: 1500.00,
             salarios: 2000.00,
-            marketing: 300.00
+            marketing: 300.00,
+            qtdVendaMensal: 200
         },
         'moda': {
             materiaPrima: 25.00,
@@ -298,7 +592,8 @@ function sugerirCustosPorSetor() {
             frete: 8.00,
             aluguel: 800.00,
             salarios: 1800.00,
-            marketing: 400.00
+            marketing: 400.00,
+            qtdVendaMensal: 80
         },
         'artesanato': {
             materiaPrima: 12.00,
@@ -306,7 +601,8 @@ function sugerirCustosPorSetor() {
             frete: 10.00,
             aluguel: 500.00,
             salarios: 1500.00,
-            marketing: 200.00
+            marketing: 200.00,
+            qtdVendaMensal: 50
         },
         'servicos': {
             materiaPrima: 5.00,
@@ -314,7 +610,8 @@ function sugerirCustosPorSetor() {
             frete: 0.00,
             aluguel: 600.00,
             salarios: 2500.00,
-            marketing: 500.00
+            marketing: 500.00,
+            qtdVendaMensal: 30
         }
     };
     
@@ -326,6 +623,7 @@ function sugerirCustosPorSetor() {
         const aluguelEl = document.getElementById('aluguel');
         const salariosEl = document.getElementById('salarios');
         const marketingEl = document.getElementById('marketing');
+        const qtdVendaEl = document.getElementById('qtdVendaMensal');
         
         if (materiaPrimaEl) materiaPrimaEl.value = template.materiaPrima;
         if (embalagemEl) embalagemEl.value = template.embalagem;
@@ -333,6 +631,7 @@ function sugerirCustosPorSetor() {
         if (aluguelEl) aluguelEl.value = template.aluguel;
         if (salariosEl) salariosEl.value = template.salarios;
         if (marketingEl) marketingEl.value = template.marketing;
+        if (qtdVendaEl) qtdVendaEl.value = template.qtdVendaMensal;
         
         calcularCustos();
         mostrarToast('Custos do setor ' + setor + ' aplicados!', 'success');
@@ -348,6 +647,39 @@ function aplicarTemplateSetor(setor) {
 }
 
 // ==================== FUNÇÕES DA TAB PRECIFICAÇÃO ====================
+
+function atualizarPrecificacao() {
+    console.log('Atualizando precificação...');
+    
+    // Recalcular custos para ter dados atualizados
+    const custos = calcularCustos();
+    
+    if (!custos.totalUnitario || custos.totalUnitario === 0) {
+        mostrarToast('Complete os custos primeiro!', 'warning');
+        return;
+    }
+    
+    // Aplicar método selecionado
+    switch(metodoPrecificacaoSelecionado) {
+        case 'markup':
+            const markupValue = document.getElementById('markupInput')?.value || 
+                              custos.markupSugerido || 100;
+            atualizarMarkup(markupValue);
+            break;
+            
+        case 'margem':
+            calcularPrecoPorMargem();
+            break;
+            
+        case 'mercado':
+            sugerirPrecoPorMercado();
+            break;
+            
+        default:
+            // Para outros métodos, usar markup padrão
+            atualizarMarkup(custos.markupSugerido || 100);
+    }
+}
 
 function selecionarMetodo(metodo) {
     metodoPrecificacaoSelecionado = metodo;
@@ -379,15 +711,22 @@ function selecionarMetodo(metodo) {
     
     // Para o método markup, atualizar valores
     if (metodo === 'markup') {
-        const markupValue = document.getElementById('markupInput')?.value || 100;
+        const custos = dadosNegocio.custos || {};
+        const markupValue = document.getElementById('markupInput')?.value || custos.markupSugerido || 100;
         atualizarMarkup(markupValue);
     }
     
-    // Feedback visual
-    mostrarToast('Método ' + (nomes[metodo] || metodo) + ' selecionado!', 'success');
+    // Para o método margem, calcular
+    if (metodo === 'margem') {
+        calcularPrecoPorMargem();
+    }
     
-    // Recalcular precificação
-    atualizarPrecificacao();
+    // Para o método mercado, sugerir preço
+    if (metodo === 'mercado') {
+        sugerirPrecoPorMercado();
+    }
+    
+    mostrarToast('Método ' + metodo + ' selecionado!', 'success');
 }
 
 function atualizarMarkup(valor) {
@@ -398,13 +737,18 @@ function atualizarMarkup(valor) {
     if (markupInput) markupInput.value = valor;
     
     // Atualizar preços sugeridos
-    const custoUnitario = dadosNegocio.custos.totalUnitario || 0;
+    const custoUnitario = dadosNegocio.custos?.totalUnitario || 0;
+    
+    if (custoUnitario === 0) {
+        mostrarToast('Complete os custos primeiro!', 'warning');
+        return;
+    }
     
     // Preços com diferentes markups
     const precoMin = custoUnitario * 1.6;
     const precoMedio = custoUnitario * 2.0;
     const precoMax = custoUnitario * 2.5;
-    const precoAtual = custoUnitario * (1 + valor/100);
+    const precoAtual = custoUnitario * (1 + parseFloat(valor)/100);
     
     const precoMarkupMin = document.getElementById('precoMarkupMin');
     const precoMarkupMedio = document.getElementById('precoMarkupMedio');
@@ -421,46 +765,77 @@ function atualizarMarkup(valor) {
     const precoVendaFinal = document.getElementById('precoVendaFinal');
     
     if (precoFinalSugerido) precoFinalSugerido.textContent = formatarMoeda(precoAtual);
-    if (precoVendaFinal) precoVendaFinal.value = precoAtual.toFixed(2);
+    if (precoVendaFinal) {
+        precoVendaFinal.value = precoAtual.toFixed(2);
+        atualizarPrecoFinal(precoAtual);
+    }
     
-    // Atualizar composição
-    atualizarComposicaoPreco(precoAtual);
-    
-    // Calcular impacto
-    calcularImpactoPreco(precoAtual);
+    // Salvar markup no dadosNegocio
+    dadosNegocio.custos.markupAplicado = parseFloat(valor);
 }
 
-function atualizarComposicaoPreco(preco) {
-    const custos = dadosNegocio.custos;
+function calcularPrecoPorMargem() {
+    const margemDesejada = parseFloat(document.getElementById('margemDesejada')?.value) || 30;
+    const custoUnitario = dadosNegocio.custos?.totalUnitario || 0;
     
-    if (!custos.totalUnitario) return;
+    if (custoUnitario === 0) {
+        mostrarToast('Complete os custos primeiro!', 'warning');
+        return;
+    }
     
-    const custoVarUnit = custos.variavelUnitario || 0;
-    const custoFixoUnit = custos.fixoUnitario || 0;
-    const custoTotalUnit = custos.totalUnitario || 0;
-    const markup = ((preco - custoTotalUnit) / custoTotalUnit) * 100;
-    const lucroUnitario = preco - custoTotalUnit;
-    const margemLucro = (lucroUnitario / preco) * 100;
+    // Fórmula: Preço = Custo / (1 - Margem)
+    const preco = custoUnitario / (1 - (margemDesejada/100));
     
-    const compCustoVarUnit = document.getElementById('compCustoVarUnit');
-    const compCustoFixoUnit = document.getElementById('compCustoFixoUnit');
-    const compCustoTotalUnit = document.getElementById('compCustoTotalUnit');
-    const compMarkupAplicado = document.getElementById('compMarkupAplicado');
-    const compPrecoFinal = document.getElementById('compPrecoFinal');
-    const lucroPorUnidade = document.getElementById('lucroPorUnidade');
-    const margemLucroUnidade = document.getElementById('margemLucroUnidade');
+    const precoMargemSugerido = document.getElementById('precoMargemSugerido');
+    if (precoMargemSugerido) {
+        precoMargemSugerido.textContent = formatarMoeda(preco);
+    }
     
-    if (compCustoVarUnit) compCustoVarUnit.textContent = formatarMoeda(custoVarUnit);
-    if (compCustoFixoUnit) compCustoFixoUnit.textContent = formatarMoeda(custoFixoUnit);
-    if (compCustoTotalUnit) compCustoTotalUnit.textContent = formatarMoeda(custoTotalUnit);
-    if (compMarkupAplicado) compMarkupAplicado.textContent = markup.toFixed(1) + '%';
-    if (compPrecoFinal) compPrecoFinal.textContent = formatarMoeda(preco);
-    if (lucroPorUnidade) lucroPorUnidade.textContent = formatarMoeda(lucroUnitario);
-    if (margemLucroUnidade) margemLucroUnidade.textContent = margemLucro.toFixed(1) + '%';
+    // Atualizar preço final se este método estiver selecionado
+    if (metodoPrecificacaoSelecionado === 'margem') {
+        const precoVendaFinal = document.getElementById('precoVendaFinal');
+        if (precoVendaFinal) {
+            precoVendaFinal.value = preco.toFixed(2);
+            atualizarPrecoFinal(preco);
+        }
+    }
+}
+
+function sugerirPrecoPorMercado() {
+    const precoMin = parseFloat(document.getElementById('precoMinConcorrencia')?.value) || 0;
+    const precoMedio = parseFloat(document.getElementById('precoMedioConcorrencia')?.value) || 0;
+    const precoMax = parseFloat(document.getElementById('precoMaxConcorrencia')?.value) || 0;
     
-    // Atualizar gráfico de composição
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.atualizarGraficoComposicaoPreco(preco, custoVarUnit, custoFixoUnit, markup);
+    if (precoMedio === 0) {
+        mostrarToast('Insira os preços da concorrência!', 'warning');
+        return;
+    }
+    
+    const custoUnitario = dadosNegocio.custos?.totalUnitario || 0;
+    let precoSugerido = precoMedio;
+    
+    // Ajustar baseado no custo
+    if (custoUnitario > 0) {
+        const margemMinima = 20; // 20% de margem mínima
+        const precoMinimo = custoUnitario * (1 + margemMinima/100);
+        
+        if (precoSugerido < precoMinimo) {
+            precoSugerido = precoMinimo;
+        }
+    }
+    
+    const precoMercadoSugerido = document.getElementById('precoMercadoSugerido');
+    if (precoMercadoSugerido) {
+        precoMercadoSugerido.textContent = formatarMoeda(precoSugerido);
+    }
+    
+    // Atualizar preço final se este método estiver selecionado
+    if (metodoPrecificacaoSelecionado === 'mercado') {
+        const precoVendaFinal = document.getElementById('precoVendaFinal');
+        if (precoVendaFinal) {
+            precoVendaFinal.value = precoSugerido.toFixed(2);
+            atualizarPrecoFinal(precoSugerido);
+        }
     }
 }
 
@@ -492,16 +867,12 @@ function aplicarPrecoPsicologico(tipo) {
 
 function atualizarPrecoFinal(valor) {
     const preco = parseFloat(valor) || 0;
-    const descontoPercent = parseFloat(document.getElementById('descontoPromocional')?.value) || 0;
-    
-    // Aplicar desconto se necessário
-    const precoComDesconto = preco * (1 - descontoPercent/100);
     
     // Atualizar composição
-    atualizarComposicaoPreco(precoComDesconto);
+    atualizarComposicaoPreco(preco);
     
     // Calcular impacto
-    calcularImpactoPreco(precoComDesconto);
+    calcularImpactoPreco(preco);
     
     // Atualizar preços psicológicos
     const precoPsico99 = document.getElementById('precoPsico99');
@@ -509,22 +880,61 @@ function atualizarPrecoFinal(valor) {
     const precoPsico90 = document.getElementById('precoPsico90');
     const precoPsicoArred = document.getElementById('precoPsicoArred');
     
-    if (precoPsico99) precoPsico99.textContent = formatarMoeda(Math.floor(precoComDesconto) + 0.99);
-    if (precoPsico95) precoPsico95.textContent = formatarMoeda(Math.floor(precoComDesconto) + 0.95);
-    if (precoPsico90) precoPsico90.textContent = formatarMoeda(Math.floor(precoComDesconto) + 0.90);
-    if (precoPsicoArred) precoPsicoArred.textContent = formatarMoeda(Math.round(precoComDesconto));
+    if (precoPsico99) precoPsico99.textContent = formatarMoeda(Math.floor(preco) + 0.99);
+    if (precoPsico95) precoPsico95.textContent = formatarMoeda(Math.floor(preco) + 0.95);
+    if (precoPsico90) precoPsico90.textContent = formatarMoeda(Math.floor(preco) + 0.90);
+    if (precoPsicoArred) precoPsicoArred.textContent = formatarMoeda(Math.round(preco));
+    
+    // Atualizar gráficos
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+    }
+}
+
+function atualizarComposicaoPreco(preco) {
+    const custos = dadosNegocio.custos;
+    
+    if (!custos || !custos.totalUnitario) return;
+    
+    const custoVarUnit = custos.variavelUnitario || 0;
+    const custoFixoUnit = custos.fixoUnitario || 0;
+    const custoTotalUnit = custos.totalUnitario || 0;
+    const markup = ((preco - custoTotalUnit) / custoTotalUnit) * 100;
+    const lucroUnitario = preco - custoTotalUnit;
+    const margemLucro = (lucroUnitario / preco) * 100;
+    
+    const compCustoVarUnit = document.getElementById('compCustoVarUnit');
+    const compCustoFixoUnit = document.getElementById('compCustoFixoUnit');
+    const compCustoTotalUnit = document.getElementById('compCustoTotalUnit');
+    const compMarkupAplicado = document.getElementById('compMarkupAplicado');
+    const compPrecoFinal = document.getElementById('compPrecoFinal');
+    const lucroPorUnidade = document.getElementById('lucroPorUnidade');
+    const margemLucroUnidade = document.getElementById('margemLucroUnidade');
+    
+    if (compCustoVarUnit) compCustoVarUnit.textContent = formatarMoeda(custoVarUnit);
+    if (compCustoFixoUnit) compCustoFixoUnit.textContent = formatarMoeda(custoFixoUnit);
+    if (compCustoTotalUnit) compCustoTotalUnit.textContent = formatarMoeda(custoTotalUnit);
+    if (compMarkupAplicado) compMarkupAplicado.textContent = markup.toFixed(1) + '%';
+    if (compPrecoFinal) compPrecoFinal.textContent = formatarMoeda(preco);
+    if (lucroPorUnidade) lucroPorUnidade.textContent = formatarMoeda(lucroUnitario);
+    if (margemLucroUnidade) margemLucroUnidade.textContent = margemLucro.toFixed(1) + '%';
+    
+    // Atualizar gráfico de composição
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.atualizarGraficoComposicaoPreco(preco, custoVarUnit, custoFixoUnit);
+    }
 }
 
 function calcularImpactoPreco(preco) {
     const custos = dadosNegocio.custos;
-    const qtdMensal = custos.qtdMensal || 100;
+    const qtdMensal = custos?.qtdMensal || 100;
     
-    if (!custos.totalUnitario) return;
+    if (!custos || !custos.totalUnitario) return;
     
     const lucroUnitario = preco - custos.totalUnitario;
     const lucroMensal = lucroUnitario * qtdMensal;
     const margemLucro = (lucroUnitario / preco) * 100;
-    const pontoEquilibrio = Math.ceil(custos.fixoMensal / lucroUnitario);
+    const pontoEquilibrio = Math.ceil(custos.fixoMensal / Math.max(0.01, lucroUnitario));
     
     const impactoMargem = document.getElementById('impactoMargem');
     const impactoLucroUnit = document.getElementById('impactoLucroUnit');
@@ -592,40 +1002,28 @@ function analisarConcorrencia() {
     // Determinar posição
     let posicaoTexto = '';
     let posicaoCor = '';
-    let marcadorPos = 0;
     
     if (meuPreco < precoMin * 1.1) {
         posicaoTexto = 'Muito abaixo da média';
         posicaoCor = 'text-red-600 dark:text-red-400';
-        marcadorPos = 10;
     } else if (meuPreco < precoMedio * 0.9) {
         posicaoTexto = 'Abaixo da média';
         posicaoCor = 'text-orange-600 dark:text-orange-400';
-        marcadorPos = 30;
-        } else if (meuPreco <= precoMedio * 1.1) {
+    } else if (meuPreco <= precoMedio * 1.1) {
         posicaoTexto = 'No preço médio';
         posicaoCor = 'text-green-600 dark:text-green-400';
-        marcadorPos = 50;
     } else if (meuPreco <= precoMax * 0.9) {
         posicaoTexto = 'Acima da média';
         posicaoCor = 'text-blue-600 dark:text-blue-400';
-        marcadorPos = 70;
     } else {
         posicaoTexto = 'Muito acima da média';
         posicaoCor = 'text-purple-600 dark:text-purple-400';
-        marcadorPos = 90;
     }
     
     const posicaoMercadoElement = document.getElementById('posicaoMercado');
     if (posicaoMercadoElement) {
         posicaoMercadoElement.textContent = posicaoTexto;
         posicaoMercadoElement.className = 'font-bold ' + posicaoCor;
-    }
-    
-    // Atualizar marcador no gráfico
-    const marcadorPosicao = document.getElementById('marcadorPosicao');
-    if (marcadorPosicao) {
-        marcadorPosicao.style.left = marcadorPos + '%';
     }
     
     // Recomendação baseada na posição
@@ -664,7 +1062,7 @@ function calcularResultados() {
     const preco = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
     const custos = dadosNegocio.custos;
     
-    if (!custos.totalUnitario || preco === 0) {
+    if (!custos?.totalUnitario || preco === 0) {
         mostrarToast('Complete a precificação primeiro!', 'warning');
         return;
     }
@@ -677,19 +1075,19 @@ function calcularResultados() {
     const receitaMensal = preco * qtdMensal;
     const custoTotalMensal = custoUnitario * qtdMensal;
     const lucroMensal = receitaMensal - custoTotalMensal;
-    const margemLucro = (lucroMensal / receitaMensal) * 100;
+    const margemLucro = receitaMensal > 0 ? (lucroMensal / receitaMensal) * 100 : 0;
     
     const lucroUnitario = preco - custoUnitario;
-    const margemLucroUnitario = (lucroUnitario / preco) * 100;
+    const margemLucroUnitario = preco > 0 ? (lucroUnitario / preco) * 100 : 0;
     
     // Ponto de equilíbrio
-    const pontoEquilibrioUnidades = Math.ceil(custos.fixoMensal / lucroUnitario);
+    const pontoEquilibrioUnidades = Math.ceil(custos.fixoMensal / Math.max(0.01, lucroUnitario));
     const pontoEquilibrioValor = pontoEquilibrioUnidades * preco;
     
     // ROI e Retorno
     const investimentoInicial = parseFloat(document.getElementById('investimentoInicial')?.value) || 1000;
-    const roiMensal = (lucroMensal / investimentoInicial) * 100;
-    const mesesRetorno = Math.ceil(investimentoInicial / lucroMensal);
+    const roiMensal = investimentoInicial > 0 ? (lucroMensal / investimentoInicial) * 100 : 0;
+    const mesesRetorno = Math.ceil(investimentoInicial / Math.max(0.01, lucroMensal));
     
     // Atualizar indicadores de resultado
     const indicadores = [
@@ -773,7 +1171,7 @@ function calcularResultados() {
 function atualizarProjecoes() {
     const resultados = dadosNegocio.resultados;
     
-    if (!resultados.receitaMensal) {
+    if (!resultados?.receitaMensal) {
         mostrarToast('Calcule os resultados primeiro!', 'warning');
         return;
     }
@@ -830,11 +1228,6 @@ function atualizarProjecoes() {
     if (projLucroAnual) projLucroAnual.textContent = formatarMoeda(lucroAnual);
     if (projMediaMensal) projMediaMensal.textContent = formatarMoeda(lucroAnual / 12);
     
-    // Atualizar gráfico de projeções se disponível
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.atualizarGraficoProjecoes(labels, projReceita, projLucro, projAcumulado);
-    }
-    
     // Calcular meta de faturamento
     calcularMetaFaturamento(receitaAnual);
 }
@@ -872,7 +1265,7 @@ function gerarRecomendacoes() {
     const mercado = dadosNegocio.mercado;
     const custos = dadosNegocio.custos;
     
-    if (!resultados.lucroMensal) {
+    if (!resultados?.lucroMensal) {
         mostrarToast('Complete todas as etapas primeiro!', 'warning');
         return;
     }
@@ -1018,20 +1411,20 @@ function atualizarResumoDashboard() {
     
     // Preço sugerido
     const precoSugerido = document.getElementById('dashboardPrecoSugerido');
-    if (precoSugerido && custos.totalUnitario) {
+    if (precoSugerido && custos?.totalUnitario) {
         const precoComMarkup = custos.totalUnitario * (1 + (custos.markupSugerido || 100)/100);
         precoSugerido.textContent = formatarMoeda(precoComMarkup);
     }
     
     // Custo unitário
     const custoUnitario = document.getElementById('dashboardCustoUnitario');
-    if (custoUnitario && custos.totalUnitario) {
+    if (custoUnitario && custos?.totalUnitario) {
         custoUnitario.textContent = formatarMoeda(custos.totalUnitario);
     }
     
     // Margem estimada
     const margemEstimada = document.getElementById('dashboardMargemEstimada');
-    if (margemEstimada && custos.totalUnitario && precoSugerido) {
+    if (margemEstimada && custos?.totalUnitario && precoSugerido) {
         const preco = parseFloat(precoSugerido.textContent.replace('R$', '').replace('.', '').replace(',', '.'));
         const margem = ((preco - custos.totalUnitario) / preco) * 100;
         margemEstimada.textContent = margem.toFixed(1) + '%';
@@ -1039,7 +1432,7 @@ function atualizarResumoDashboard() {
     
     // Lucro mensal estimado
     const lucroMensalEstimado = document.getElementById('dashboardLucroMensalEstimado');
-    if (lucroMensalEstimado && custos.totalUnitario && custos.qtdMensal && precoSugerido) {
+    if (lucroMensalEstimado && custos?.totalUnitario && custos.qtdMensal && precoSugerido) {
         const preco = parseFloat(precoSugerido.textContent.replace('R$', '').replace('.', '').replace(',', '.'));
         const lucroUnitario = preco - custos.totalUnitario;
         const lucroMensal = lucroUnitario * custos.qtdMensal;
@@ -1185,7 +1578,7 @@ function verificarAlertas() {
 // ==================== FUNÇÕES UTILITÁRIAS ====================
 
 function formatarMoeda(valor) {
-    if (isNaN(valor)) return 'R$ 0,00';
+    if (isNaN(valor) || valor === null || valor === undefined) return 'R$ 0,00';
     return 'R$ ' + valor.toLocaleString('pt-BR', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
@@ -1233,18 +1626,36 @@ function mostrarToast(mensagem, tipo = 'info') {
     }, 3000);
 }
 
+function mostrarAlertaErro(mensagem) {
+    const alerta = document.createElement('div');
+    alerta.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded fixed top-4 left-1/2 transform -translate-x-1/2 z-50';
+    alerta.innerHTML = `
+        <strong>Erro:</strong> ${mensagem}
+        <button class="float-right font-bold" onclick="this.parentElement.remove()">&times;</button>
+    `;
+    document.body.appendChild(alerta);
+}
+
 function inicializarEventos() {
+    console.log('Inicializando eventos...');
+    
     // Atualizar custos quando inputs mudam
-    document.querySelectorAll('#tabCustos input').forEach(input => {
-        input.addEventListener('input', calcularCustos);
+    document.querySelectorAll('#tabCustos input, #tabCustos select').forEach(input => {
+        input.addEventListener('input', function() {
+            calcularCustos();
+            if (typeof atualizarPrecificacao === 'function') {
+                atualizarPrecificacao();
+            }
+        });
     });
     
     // Atualizar precificação quando inputs mudam
-    document.querySelectorAll('#tabPrecificacao input').forEach(input => {
-        input.addEventListener('input', () => {
-            atualizarPrecoFinal(document.getElementById('precoVendaFinal')?.value);
+    const precoVendaFinal = document.getElementById('precoVendaFinal');
+    if (precoVendaFinal) {
+        precoVendaFinal.addEventListener('input', function() {
+            atualizarPrecoFinal(this.value);
         });
-    });
+    }
     
     // Markup slider
     const markupSlider = document.getElementById('markupSlider');
@@ -1261,6 +1672,20 @@ function inicializarEventos() {
             atualizarMarkup(this.value);
         });
     }
+    
+    // Margem desejada
+    const margemDesejada = document.getElementById('margemDesejada');
+    if (margemDesejada) {
+        margemDesejada.addEventListener('input', calcularPrecoPorMargem);
+    }
+    
+    // Eventos de mercado
+    document.querySelectorAll('#tabMercado input').forEach(input => {
+        input.addEventListener('input', function() {
+            analisarConcorrencia();
+            sugerirPrecoPorMercado();
+        });
+    });
     
     // Botão de salvar
     const btnSalvar = document.getElementById('btnSalvarDados');
@@ -1279,6 +1704,8 @@ function inicializarEventos() {
     if (btnImprimir) {
         btnImprimir.addEventListener('click', imprimirRelatorio);
     }
+    
+    console.log('Eventos inicializados!');
 }
 
 function salvarDados() {
@@ -1312,9 +1739,6 @@ function carregarDadosSalvos() {
         if (dados.dadosNegocio) {
             Object.assign(dadosNegocio, dados.dadosNegocio);
             
-            // Atualizar inputs com dados salvos
-            atualizarInputsComDadosSalvos();
-            
             // Recalcular
             calcularCustos();
             atualizarDashboard();
@@ -1327,12 +1751,6 @@ function carregarDadosSalvos() {
     }
     
     return false;
-}
-
-function atualizarInputsComDadosSalvos() {
-    // Esta função precisaria ser expandida para atualizar todos os inputs
-    // com base nos dados salvos em dadosNegocio
-    // Por enquanto, é apenas um placeholder
 }
 
 function exportarDados() {
@@ -1421,6 +1839,7 @@ window.sugerirCustosPorSetor = sugerirCustosPorSetor;
 window.aplicarTemplateSetor = aplicarTemplateSetor;
 window.selecionarMetodo = selecionarMetodo;
 window.atualizarMarkup = atualizarMarkup;
+window.atualizarPrecificacao = atualizarPrecificacao;
 window.aplicarPrecoPsicologico = aplicarPrecoPsicologico;
 window.atualizarPrecoFinal = atualizarPrecoFinal;
 window.analisarConcorrencia = analisarConcorrencia;
@@ -1428,19 +1847,8 @@ window.calcularResultados = calcularResultados;
 window.atualizarProjecoes = atualizarProjecoes;
 window.calcularMetaFaturamento = calcularMetaFaturamento;
 window.gerarRecomendacoes = gerarRecomendacoes;
-
-// Expor para uso em outros arquivos
 window.formatarMoeda = formatarMoeda;
 window.mostrarToast = mostrarToast;
 window.salvarDados = salvarDados;
 
 console.log('✅ Script principal carregado e pronto!');
-
-// Inicialização automática quando DOM estiver pronto
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('📊 Precifica.AI inicializado!');
-    });
-} else {
-    console.log('📊 Precifica.AI já inicializado!');
-}
