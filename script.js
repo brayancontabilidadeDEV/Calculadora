@@ -1,7 +1,19 @@
 // NO INÍCIO DO script.js, APÓS AS VARIÁVEIS GLOBAIS
 // Garantir que dadosNegocio esteja acessível globalmente
-if (!window.dadosNegocio) {
-    window.dadosNegocio = dadosNegocio;
+window.dadosNegocio = {
+    empresa: {},
+    produto: {},
+    custos: {},
+    precificacao: {},
+    mercado: {},
+    resultados: {}
+};
+
+// Atalho para acesso interno
+let dadosNegocio = window.dadosNegocio;
+
+let passoAtualDados = 1;
+let metodoPrecificacaoSelecionado = 'markup';
 }
 
 // Corrigir a função atualizarGraficoComposicao
@@ -21,6 +33,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Chart.js carregado com sucesso! Versão:', Chart.version);
     
+    // Verificar se GerenciadorGraficos foi carregado
+    if (typeof GerenciadorGraficos === 'undefined') {
+        console.error('GerenciadorGraficos não foi carregado! Verifique se graficos.js está incluído.');
+        return;
+    }
+    
+    // Inicializar gerenciador de gráficos
+    try {
+        window.gerenciadorGraficos = new GerenciadorGraficos();
+        window.gerenciadorGraficos.inicializarGraficos();
+        console.log('Gerenciador de gráficos inicializado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao inicializar gerenciador de gráficos:', error);
+    }
+    
     // Inicializar funcionalidades básicas
     carregarDadosSalvos();
     calcularCustos();
@@ -35,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar eventos
     inicializarEventos();
+    
+    console.log('✅ Inicialização completa!');
 });
 
 // Variáveis globais
@@ -1308,13 +1337,19 @@ function atualizarProgresso() {
     if (progressoDadosBar) progressoDadosBar.style.width = `${progresso}%`;
 }
 
-// Expor funções para uso global
+// ==================== EXPOSIÇÃO GLOBAL DE FUNÇÕES ====================
+
+// Expor dadosNegocio globalmente (garantia adicional)
+window.dadosNegocio = dadosNegocio;
+
+// Expor todas as funções necessárias globalmente
 window.calcularCustos = calcularCustos;
 window.calcularResultados = calcularResultados;
 window.calcularTudo = calcularTudo;
 window.openTab = openTab;
 window.toggleDarkMode = toggleDarkMode;
 window.saveProgress = saveProgress;
+window.salvarRascunho = salvarRascunho;
 window.analisarConcorrencia = analisarConcorrencia;
 window.atualizarValorPercebido = atualizarValorPercebido;
 window.exportarTodosGraficos = exportarTodosGraficos;
@@ -1322,3 +1357,20 @@ window.atualizarTodosGraficosComDados = atualizarTodosGraficosComDados;
 window.exportarGraficoParaImagem = exportarGraficoParaImagem;
 window.abrirModalGrafico = abrirModalGrafico;
 window.fecharModal = fecharModal;
+window.mostrarPassoDados = mostrarPassoDados;
+window.avancarPassoDados = avancarPassoDados;
+window.voltarPassoDados = voltarPassoDados;
+window.sugerirCustosPorSetor = sugerirCustosPorSetor;
+window.aplicarTemplateSetor = aplicarTemplateSetor;
+window.selecionarMetodo = selecionarMetodo;
+window.atualizarMarkup = atualizarMarkup;
+window.aplicarPrecoPsicologico = aplicarPrecoPsicologico;
+window.atualizarPrecoFinal = atualizarPrecoFinal;
+window.atualizarProjecoes = atualizarProjecoes;
+window.gerarRecomendacoes = gerarRecomendacoes;
+window.exportToExcel = exportToExcel;
+window.gerarRelatorioCompleto = gerarRelatorioCompleto;
+window.resetarCalculadora = resetarCalculadora;
+
+console.log('✅ Funções expostas globalmente');
+
