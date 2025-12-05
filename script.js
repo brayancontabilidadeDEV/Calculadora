@@ -1,5 +1,5 @@
 // ==================== CALCULADORA MEI PREMIUM - BRAYAN CONTABILIDADE ====================
-// Versão 2.1 - Corrigida e com Cenários
+// Versão 3.0 - Sistema de Abas Corrigido
 
 // ==================== VARIÁVEIS GLOBAIS ====================
 let dadosNegocio = {
@@ -16,11 +16,111 @@ let dadosNegocio = {
 let passoAtualDados = 1;
 let metodoPrecificacaoSelecionado = 'markup';
 let graficosInicializados = false;
-let dicasAtivas = [];
+
+// ==================== SISTEMA DE ABAS ====================
+function openTab(tabName) {
+    console.log(`Tentando abrir tab: ${tabName}`);
+    
+    try {
+        // Lista de tabs válidas
+        const tabsValidas = ['dashboard', 'dados', 'custos', 'precificacao', 'mercado', 'resultados', 'graficos', 'projecoes', 'recomendacoes'];
+        
+        if (!tabsValidas.includes(tabName)) {
+            console.error(`Tab inválida: ${tabName}`);
+            return;
+        }
+        
+        // Ocultar todas as tabs
+        const tabContents = document.querySelectorAll('.tab-content');
+        console.log(`Encontradas ${tabContents.length} tabs`);
+        
+        tabContents.forEach(tab => {
+            tab.classList.remove('active');
+            tab.setAttribute('hidden', 'true');
+        });
+        
+        // Remover destaque dos botões
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        tabButtons.forEach(btn => {
+            btn.classList.remove('gradient-primary', 'text-white');
+            btn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-300');
+        });
+        
+        // Mostrar tab selecionada
+        const tabElement = document.getElementById(tabName);
+        if (tabElement) {
+            tabElement.classList.add('active');
+            tabElement.removeAttribute('hidden');
+            console.log(`Tab ${tabName} mostrada com sucesso`);
+        } else {
+            console.error(`Elemento da tab ${tabName} não encontrado`);
+        }
+        
+        // Destacar botão correspondente
+        const tabBtnId = `tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
+        const tabBtn = document.getElementById(tabBtnId);
+        if (tabBtn) {
+            tabBtn.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-300');
+            tabBtn.classList.add('gradient-primary', 'text-white');
+            console.log(`Botão ${tabBtnId} destacado`);
+        }
+        
+        // Executar ações específicas da tab
+        executarAcoesTab(tabName);
+        
+        // Salvar tab atual
+        localStorage.setItem('ultimaTab', tabName);
+        
+    } catch (error) {
+        console.error('Erro ao abrir tab:', error);
+        mostrarToast('Erro de navegação', 'error');
+    }
+}
+
+function executarAcoesTab(tabName) {
+    console.log(`Executando ações da tab: ${tabName}`);
+    
+    const acoes = {
+        'dashboard': () => {
+            atualizarDashboard();
+        },
+        'custos': () => {
+            calcularCustos();
+        },
+        'precificacao': () => {
+            atualizarPrecificacao();
+        },
+        'mercado': () => {
+            analisarConcorrencia();
+        },
+        'resultados': () => {
+            calcularResultados();
+        },
+        'graficos': () => {
+            if (window.gerenciadorGraficos && window.gerenciadorGraficos.inicializado) {
+                setTimeout(() => {
+                    window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+                }, 300);
+            } else {
+                console.log('Gráficos não inicializados ainda');
+            }
+        },
+        'projecoes': () => {
+            atualizarProjecoes();
+        },
+        'recomendacoes': () => {
+            gerarRecomendacoes();
+        }
+    };
+    
+    if (acoes[tabName]) {
+        acoes[tabName]();
+    }
+}
 
 // ==================== INICIALIZAÇÃO ====================
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Calculadora MEI Premium - Brayan Contabilidade');
+    console.log('🚀 Calculadora MEI Premium - Brayan Contabilidade v3.0');
     
     // Verificar dependências
     if (typeof Chart === 'undefined') {
@@ -44,20 +144,26 @@ function inicializarAplicacao() {
         
         // Inicializar eventos
         inicializarEventos();
-        inicializarTooltips();
         
-        // Inicializar gráficos
-        if (typeof window.gerenciadorGraficos !== 'undefined') {
-            setTimeout(() => {
+        // Inicializar gráficos com delay
+        setTimeout(() => {
+            if (typeof window.gerenciadorGraficos !== 'undefined') {
                 window.gerenciadorGraficos.inicializarTodosGraficos();
                 graficosInicializados = true;
-            }, 500);
-        }
+                console.log('✅ Gráficos inicializados');
+            }
+        }, 1000);
         
         // Calcular valores iniciais
         calcularCustos();
         atualizarDashboard();
         atualizarProgresso();
+        
+        // Restaurar última tab
+        const ultimaTab = localStorage.getItem('ultimaTab') || 'dashboard';
+        setTimeout(() => {
+            openTab(ultimaTab);
+        }, 500);
         
         console.log('✅ Aplicação inicializada com sucesso!');
         mostrarToast('Calculadora MEI Premium pronta!', 'success');
@@ -66,68 +172,6 @@ function inicializarAplicacao() {
         console.error('❌ Erro na inicialização:', error);
         mostrarToast('Erro ao iniciar. Contate suporte.', 'error');
     }
-}
-
-// ==================== NAVEGAÇÃO ====================
-function openTab(tabName) {
-    try {
-        const tabsValidas = ['dashboard', 'dados', 'custos', 'precificacao', 'mercado', 'resultados', 'graficos', 'projecoes', 'recomendacoes'];
-        if (!tabsValidas.includes(tabName)) {
-            console.error('Tab inválida:', tabName);
-            return;
-        }
-        
-        // Ocultar todas as tabs
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-            tab.hidden = true;
-        });
-        
-        // Remover destaque dos botões
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.className = btn.className.replace('gradient-primary text-white', 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300');
-        });
-        
-        // Ativar tab selecionada
-        const tabElement = document.getElementById(tabName);
-        if (tabElement) {
-            tabElement.classList.add('active');
-            tabElement.hidden = false;
-        }
-        
-        // Ativar botão correspondente
-        const tabBtnId = `tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
-        const tabBtn = document.getElementById(tabBtnId);
-        if (tabBtn) {
-            tabBtn.className = 'tab-btn px-4 py-3 rounded-xl font-medium gradient-primary text-white shadow-md hover-lift';
-        }
-        
-        // Executar ações específicas da tab
-        executarAcoesTab(tabName);
-        
-    } catch (error) {
-        console.error('Erro ao abrir tab:', error);
-        mostrarToast('Erro de navegação', 'error');
-    }
-}
-
-function executarAcoesTab(tabName) {
-    const acoes = {
-        'dashboard': () => atualizarDashboard(),
-        'custos': () => calcularCustos(),
-        'precificacao': () => atualizarPrecificacao(),
-        'mercado': () => analisarConcorrencia(),
-        'resultados': () => calcularResultados(),
-        'graficos': () => {
-            if (graficosInicializados && window.gerenciadorGraficos) {
-                setTimeout(() => window.gerenciadorGraficos.atualizarTodosGraficosComDados(), 300);
-            }
-        },
-        'projecoes': () => atualizarProjecoes(),
-        'recomendacoes': () => gerarRecomendacoes()
-    };
-    
-    if (acoes[tabName]) acoes[tabName]();
 }
 
 // ==================== CÁLCULO DE CUSTOS ====================
@@ -169,6 +213,11 @@ function calcularCustos() {
         atualizarElementoTexto('resumoCustoFixo', formatarMoeda(custoFixoMensal));
         atualizarElementoTexto('resumoCustoTotal', formatarMoeda(custoTotalUnitario * qtdMensal));
         
+        // Atualizar campos para outros cálculos
+        if (document.getElementById('custoVariavelUnitario')) {
+            document.getElementById('custoVariavelUnitario').value = custoVariavelUnitario.toFixed(2);
+        }
+        
         console.log('✅ Custos calculados!');
         
     } catch (error) {
@@ -186,6 +235,12 @@ function atualizarMarkup(valor) {
         const markupValueElement = document.getElementById('markupValue');
         if (markupValueElement) {
             markupValueElement.textContent = `${markupValor}%`;
+        }
+        
+        // Atualizar slider position
+        const markupSlider = document.getElementById('markupSlider');
+        if (markupSlider) {
+            markupSlider.value = markupValor;
         }
         
         // Calcular preço
@@ -228,7 +283,6 @@ function atualizarPrecificacao() {
 }
 
 function atualizarPrecoFinal(valor) {
-    // Atualizar o preço final manualmente
     const preco = parseFloat(valor) || 0;
     atualizarElementoTexto('precoFinalSugerido', formatarMoeda(preco));
 }
@@ -266,6 +320,14 @@ function analisarConcorrencia() {
         
         atualizarElementoTexto('posicaoMercado', posicao);
         
+        // Atualizar recomendação
+        let recomendacao = 'Mantenha posição atual';
+        if (diferencaMedia < -20) recomendacao = 'AUMENTE PREÇO URGENTE';
+        else if (diferencaMedia < -10) recomendacao = 'Considere aumentar preço';
+        else if (diferencaMedia > 20) recomendacao = 'Risco de perder mercado';
+        
+        atualizarElementoTexto('recomendacaoMercado', recomendacao);
+        
         // Atualizar gráfico de comparação
         if (window.gerenciadorGraficos) {
             window.gerenciadorGraficos.atualizarGraficoComparacaoConcorrencia(precoMin, precoMedio, precoMax, meuPreco);
@@ -294,8 +356,9 @@ function calcularResultados() {
         // Cálculos
         const receitaBruta = preco * qtdMensal;
         const custoProdutos = custoUnitario * qtdMensal;
-        const lucroLiquido = receitaBruta - custoProdutos - (receitaBruta * 0.15); // 15% impostos estimados
-        const margemLiquida = (lucroLiquido / receitaBruta) * 100;
+        const impostos = receitaBruta * 0.15; // 15% impostos estimados
+        const lucroLiquido = receitaBruta - custoProdutos - impostos;
+        const margemLiquida = receitaBruta > 0 ? (lucroLiquido / receitaBruta) * 100 : 0;
         const lucroUnitario = preco - custoUnitario;
         const pontoEquilibrio = lucroUnitario > 0 ? Math.ceil(custoFixoMensal / lucroUnitario) : 0;
         
@@ -304,25 +367,47 @@ function calcularResultados() {
             receitaBruta,
             lucroLiquido,
             margemLiquida,
-            pontoEquilibrioUnidades: pontoEquilibrio
+            pontoEquilibrioUnidades: pontoEquilibrio,
+            custoUnitario,
+            precoVenda: preco,
+            qtdMensal
         };
         
-        // Atualizar interface
+        // Atualizar interface - KPIs principais
         atualizarElementoTexto('kpiFaturamento', formatarMoeda(receitaBruta));
         atualizarElementoTexto('kpiLucro', formatarMoeda(lucroLiquido));
         atualizarElementoTexto('kpiMargem', `${margemLiquida.toFixed(1)}%`);
         atualizarElementoTexto('kpiPontoEquilibrio', pontoEquilibrio);
         
+        // Atualizar detalhamento
+        atualizarElementoTexto('detalheReceita', formatarMoeda(receitaBruta));
+        atualizarElementoTexto('detalheCustosVar', formatarMoeda(dadosNegocio.custos.variavelUnitario * qtdMensal));
+        atualizarElementoTexto('detalheCustosFixos', formatarMoeda(custoFixoMensal));
+        atualizarElementoTexto('detalheImpostos', formatarMoeda(impostos));
+        
+        // Atualizar indicadores
+        atualizarElementoTexto('indicadorLucroUnitario', formatarMoeda(lucroUnitario));
+        atualizarElementoTexto('indicadorMargemBruta', `${((preco - custoUnitario) / preco * 100).toFixed(1)}%`);
+        atualizarElementoTexto('indicadorROI', `${(lucroLiquido / (custoFixoMensal + custoProdutos) * 100).toFixed(1)}%`);
+        atualizarElementoTexto('indicadorBreakEven', Math.ceil(pontoEquilibrio / (qtdMensal / 30)));
+        
+        // Atualizar dashboard também
+        atualizarDashboard();
+        
         // Atualizar gráficos
         if (window.gerenciadorGraficos) {
             window.gerenciadorGraficos.atualizarGraficoComposicao(preco, dadosNegocio.custos.variavelUnitario, dadosNegocio.custos.fixoUnitario, 100);
             window.gerenciadorGraficos.atualizarGraficoDistribuicaoPreco(dadosNegocio.custos, preco);
+            setTimeout(() => {
+                window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+            }, 300);
         }
         
         console.log('✅ Resultados calculados!');
         
     } catch (error) {
         console.error('Erro ao calcular resultados:', error);
+        mostrarToast('Erro ao calcular resultados', 'error');
     }
 }
 
@@ -341,7 +426,7 @@ function atualizarDashboard() {
     }
 }
 
-// ==================== PROJEÇÕES E CENÁRIOS ====================
+// ==================== PROJEÇÕES ====================
 function atualizarProjecoes() {
     try {
         const horizonte = parseInt(document.getElementById('horizonteProjecao')?.value) || 12;
@@ -361,8 +446,8 @@ function atualizarProjecoes() {
                 taxaCrescimento = taxaCrescimentoBase;
         }
         
-        const receitaBase = dadosNegocio.resultados?.receitaBruta || 0;
-        const lucroBase = dadosNegocio.resultados?.lucroLiquido || 0;
+        const receitaBase = dadosNegocio.resultados?.receitaBruta || 1000;
+        const lucroBase = dadosNegocio.resultados?.lucroLiquido || 300;
         
         // Gerar projeções
         const meses = [];
@@ -376,23 +461,25 @@ function atualizarProjecoes() {
             lucros.push(lucroBase * fator);
         }
         
-        // Atualizar gráficos de projeção
-        if (window.gerenciadorGraficos) {
-            window.gerenciadorGraficos.atualizarProjecoes(meses, receitas, lucros);
-        }
-        
-        // Atualizar metas trimestrais
+        // Atualizar metas
         if (horizonte >= 3) {
             atualizarElementoTexto('metaTrimestre1', formatarMoeda(receitas[2]));
         }
         if (horizonte >= 6) {
             atualizarElementoTexto('metaTrimestre2', formatarMoeda(receitas[5]));
         }
+        atualizarElementoTexto('metaAnual', formatarMoeda(receitas[horizonte-1]));
+        
+        // Atualizar gráficos de projeção
+        if (window.gerenciadorGraficos) {
+            window.gerenciadorGraficos.atualizarProjecoes(meses, receitas, lucros);
+        }
         
         mostrarToast(`Projeções atualizadas (cenário ${cenario})!`, 'success');
         
     } catch (error) {
         console.error('Erro ao atualizar projeções:', error);
+        mostrarToast('Erro ao atualizar projeções', 'error');
     }
 }
 
@@ -402,20 +489,28 @@ function gerarRecomendacoes() {
         const margem = dadosNegocio.resultados?.margemLiquida || 0;
         const pontoEquilibrio = dadosNegocio.resultados?.pontoEquilibrioUnidades || 0;
         const qtdMensal = dadosNegocio.custos?.qtdMensal || 0;
+        const preco = dadosNegocio.resultados?.precoVenda || 0;
+        const custoUnitario = dadosNegocio.custos?.totalUnitario || 0;
         
         const recomendacoes = [];
         
         // Recomendações de precificação
         if (margem < 10) {
             recomendacoes.push({
-                texto: '🚨 AUMENTE O PREÇO URGENTEMENTE',
+                texto: '🚨 AUMENTE O PREÇO URGENTEMENTE - Margem abaixo de 10%',
                 prioridade: 'alta',
                 categoria: 'Precificacao'
             });
         } else if (margem < 20) {
             recomendacoes.push({
-                texto: '📈 Considere aumentar preços gradualmente',
+                texto: '📈 Considere aumentar preços gradualmente para melhorar margem',
                 prioridade: 'media',
+                categoria: 'Precificacao'
+            });
+        } else if (margem > 40) {
+            recomendacoes.push({
+                texto: '💰 Margem excelente! Pode investir mais em marketing',
+                prioridade: 'baixa',
                 categoria: 'Precificacao'
             });
         }
@@ -423,7 +518,7 @@ function gerarRecomendacoes() {
         // Recomendações de custos
         if (dadosNegocio.custos?.fixoMensal > 2000) {
             recomendacoes.push({
-                texto: '💰 Avalie redução de custos fixos',
+                texto: '📉 Avalie redução de custos fixos para melhorar rentabilidade',
                 prioridade: 'media',
                 categoria: 'Custos'
             });
@@ -432,32 +527,22 @@ function gerarRecomendacoes() {
         // Recomendações de mercado
         if (pontoEquilibrio > qtdMensal * 0.8) {
             recomendacoes.push({
-                texto: '📊 Ponto de equilíbrio muito alto - reveja estratégia',
+                texto: '⚠️ Ponto de equilíbrio muito alto - reveja estratégia de vendas',
                 prioridade: 'alta',
                 categoria: 'Mercado'
             });
         }
         
-        // Atualizar interface
-        ['Precificacao', 'Custos', 'Mercado', 'Crescimento'].forEach(categoria => {
-            const lista = document.getElementById(`recomendacoes${categoria}`);
-            const itensCategoria = recomendacoes.filter(r => r.categoria === categoria);
-            
-            if (lista) {
-                if (itensCategoria.length === 0) {
-                    lista.innerHTML = '<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i><span>✅ Tudo em ordem</span></li>';
-                } else {
-                    lista.innerHTML = itensCategoria.map(item => `
-                        <li class="flex items-start p-3 bg-red-50 dark:bg-red-900/20 rounded-lg mb-2">
-                            <i class="fas fa-exclamation-triangle text-red-500 mt-1 mr-3"></i>
-                            <span>${item.texto}</span>
-                        </li>
-                    `).join('');
-                }
-            }
-        });
+        // Recomendações de crescimento
+        if (margem > 25 && qtdMensal < 200) {
+            recomendacoes.push({
+                texto: '🚀 Boa margem! Pode investir em expansão',
+                prioridade: 'media',
+                categoria: 'Crescimento'
+            });
+        }
         
-        // Contar por prioridade
+        // Atualizar contadores
         const alta = recomendacoes.filter(r => r.prioridade === 'alta').length;
         const media = recomendacoes.filter(r => r.prioridade === 'media').length;
         const baixa = recomendacoes.filter(r => r.prioridade === 'baixa').length;
@@ -467,57 +552,43 @@ function gerarRecomendacoes() {
         atualizarElementoTexto('prioridadeBaixa', baixa);
         atualizarElementoTexto('totalRecomendacoes', recomendacoes.length);
         
+        // Atualizar listas
+        ['Precificacao', 'Custos', 'Mercado', 'Crescimento'].forEach(categoria => {
+            const lista = document.getElementById(`recomendacoes${categoria}`);
+            const itensCategoria = recomendacoes.filter(r => r.categoria === categoria);
+            
+            if (lista) {
+                if (itensCategoria.length === 0) {
+                    lista.innerHTML = `
+                        <li class="flex items-start p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-sm text-gray-800 dark:text-gray-300">✅ Tudo em ordem nesta categoria</span>
+                        </li>`;
+                } else {
+                    lista.innerHTML = itensCategoria.map(item => {
+                        const cores = {
+                            'alta': 'red',
+                            'media': 'yellow',
+                            'baixa': 'green'
+                        };
+                        const cor = cores[item.prioridade] || 'blue';
+                        
+                        return `
+                            <li class="flex items-start p-3 bg-${cor}-50 dark:bg-${cor}-900/20 rounded-lg mb-2">
+                                <i class="fas fa-exclamation-triangle text-${cor}-500 mt-1 mr-3"></i>
+                                <span class="text-sm text-gray-800 dark:text-gray-300">${item.texto}</span>
+                            </li>`;
+                    }).join('');
+                }
+            }
+        });
+        
+        mostrarToast('Recomendações geradas com sucesso!', 'success');
+        
     } catch (error) {
         console.error('Erro ao gerar recomendações:', error);
+        mostrarToast('Erro ao gerar recomendações', 'error');
     }
-}
-
-// ==================== FUNÇÕES DO PASSO A PASSO (DADOS) ====================
-function mostrarPassoDados(passo) {
-    // Esconder todos os conteúdos
-    document.querySelectorAll('.passo-conteudo').forEach(el => {
-        el.classList.add('hidden');
-    });
-    
-    // Mostrar o passo selecionado
-    const conteudoPasso = document.getElementById(`conteudoPassoDados${passo}`);
-    if (conteudoPasso) {
-        conteudoPasso.classList.remove('hidden');
-    }
-    
-    // Atualizar botões
-    document.querySelectorAll('[id^="passoDados"]').forEach(btn => {
-        btn.classList.remove('bg-blue-100', 'dark:bg-blue-900', 'text-blue-800', 'dark:text-blue-300');
-        btn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-300');
-    });
-    
-    const btnPasso = document.getElementById(`passoDados${passo}`);
-    if (btnPasso) {
-        btnPasso.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-300');
-        btnPasso.classList.add('bg-blue-100', 'dark:bg-blue-900', 'text-blue-800', 'dark:text-blue-300');
-    }
-    
-    passoAtualDados = passo;
-}
-
-function avancarPassoDados() {
-    if (passoAtualDados < 4) {
-        mostrarPassoDados(passoAtualDados + 1);
-    } else {
-        // Se estiver no último passo, ir para a tab de custos
-        openTab('custos');
-    }
-}
-
-function voltarPassoDados() {
-    if (passoAtualDados > 1) {
-        mostrarPassoDados(passoAtualDados - 1);
-    }
-}
-
-function salvarRascunho() {
-    saveProgress();
-    mostrarToast('Rascunho salvo com sucesso!', 'success');
 }
 
 // ==================== UTILITÁRIOS ====================
@@ -540,7 +611,10 @@ function formatarMoeda(valor) {
 
 function mostrarToast(mensagem, tipo) {
     const toast = document.getElementById('toast');
-    if (!toast) return;
+    if (!toast) {
+        console.error('Elemento toast não encontrado');
+        return;
+    }
     
     const cores = {
         'success': 'bg-green-600',
@@ -561,10 +635,21 @@ function mostrarToast(mensagem, tipo) {
 function toggleDarkMode() {
     const estaDark = document.body.classList.toggle('dark-mode');
     const icon = document.getElementById('darkModeIcon');
-    if (icon) icon.className = estaDark ? 'fas fa-sun' : 'fas fa-moon';
+    if (icon) {
+        icon.className = estaDark ? 'fas fa-sun' : 'fas fa-moon';
+    }
     
     localStorage.setItem('darkMode', estaDark ? 'enabled' : 'disabled');
+    
+    // Disparar evento para gráficos
     document.dispatchEvent(new CustomEvent('darkModeChanged'));
+    
+    // Atualizar cores dos gráficos
+    if (window.gerenciadorGraficos) {
+        setTimeout(() => {
+            window.gerenciadorGraficos.atualizarCoresDarkMode();
+        }, 100);
+    }
 }
 
 function saveProgress() {
@@ -573,19 +658,17 @@ function saveProgress() {
         const dados = {
             empresa: {
                 nome: document.getElementById('empresaNome')?.value,
-                cnpj: document.getElementById('empresaCnpj')?.value,
                 setor: document.getElementById('setorEmpresa')?.value,
                 tempoMercado: document.getElementById('tempoMercado')?.value
             },
             produto: {
                 nome: document.getElementById('nomeProduto')?.value,
                 categoria: document.getElementById('categoriaProduto')?.value,
-                descricao: document.getElementById('descricaoProduto')?.value,
-                unidadeMedida: document.getElementById('unidadeMedida')?.value,
-                codigo: document.getElementById('codigoProduto')?.value
+                qtdMensal: document.getElementById('qtdVendaMensal')?.value
             },
             custos: dadosNegocio.custos,
             resultados: dadosNegocio.resultados,
+            precoVenda: document.getElementById('precoVendaFinal')?.value,
             timestamp: new Date().toISOString()
         };
         
@@ -605,7 +688,6 @@ function carregarDadosSalvos() {
             // Restaurar dados básicos
             if (dadosParse.empresa) {
                 document.getElementById('empresaNome').value = dadosParse.empresa.nome || '';
-                document.getElementById('empresaCnpj').value = dadosParse.empresa.cnpj || '';
                 document.getElementById('setorEmpresa').value = dadosParse.empresa.setor || '';
                 document.getElementById('tempoMercado').value = dadosParse.empresa.tempoMercado || '';
             }
@@ -613,9 +695,7 @@ function carregarDadosSalvos() {
             if (dadosParse.produto) {
                 document.getElementById('nomeProduto').value = dadosParse.produto.nome || '';
                 document.getElementById('categoriaProduto').value = dadosParse.produto.categoria || '';
-                document.getElementById('descricaoProduto').value = dadosParse.produto.descricao || '';
-                document.getElementById('unidadeMedida').value = dadosParse.produto.unidadeMedida || '';
-                document.getElementById('codigoProduto').value = dadosParse.produto.codigo || '';
+                document.getElementById('qtdVendaMensal').value = dadosParse.produto.qtdMensal || 100;
             }
             
             // Restaurar custos e resultados
@@ -627,60 +707,56 @@ function carregarDadosSalvos() {
                 dadosNegocio.resultados = dadosParse.resultados;
             }
             
+            // Restaurar preço
+            if (dadosParse.precoVenda) {
+                document.getElementById('precoVendaFinal').value = dadosParse.precoVenda;
+            }
+            
             console.log('✅ Dados carregados');
         }
         
+        // Restaurar modo escuro
         if (localStorage.getItem('darkMode') === 'enabled') {
             document.body.classList.add('dark-mode');
             const icon = document.getElementById('darkModeIcon');
-            if (icon) icon.className = 'fas fa-sun';
+            if (icon) {
+                icon.className = 'fas fa-sun';
+            }
         }
+        
     } catch (error) {
         console.error('Erro ao carregar dados:', error);
     }
 }
 
 function inicializarEventos() {
-    // Auto-save
-    document.querySelectorAll('input, select, textarea').forEach(el => {
+    // Auto-save em mudanças
+    document.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('change', saveProgress);
     });
-}
-
-function inicializarTooltips() {
-    document.querySelectorAll('[data-tooltip]').forEach(el => {
-        el.addEventListener('mouseenter', mostrarTooltip);
-        el.addEventListener('mouseleave', esconderTooltip);
+    
+    // Eventos de custos
+    document.getElementById('materiaPrima')?.addEventListener('input', calcularCustos);
+    document.getElementById('embalagem')?.addEventListener('input', calcularCustos);
+    document.getElementById('frete')?.addEventListener('input', calcularCustos);
+    document.getElementById('aluguel')?.addEventListener('input', calcularCustos);
+    document.getElementById('salarios')?.addEventListener('input', calcularCustos);
+    document.getElementById('das')?.addEventListener('input', calcularCustos);
+    document.getElementById('qtdVendaMensal')?.addEventListener('input', calcularCustos);
+    
+    // Evento do slider de markup
+    document.getElementById('markupSlider')?.addEventListener('input', function(e) {
+        atualizarMarkup(e.target.value);
     });
-}
-
-function mostrarTooltip(event) {
-    const texto = event.target.getAttribute('data-tooltip');
-    if (!texto) return;
     
-    const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip-ativo';
-    tooltip.textContent = texto;
-    
-    const rect = event.target.getBoundingClientRect();
-    tooltip.style.left = `${rect.left + rect.width / 2}px`;
-    tooltip.style.top = `${rect.top - 40}px`;
-    tooltip.style.transform = 'translateX(-50%)';
-    
-    document.body.appendChild(tooltip);
-    event.target._tooltip = tooltip;
-}
-
-function esconderTooltip(event) {
-    const tooltip = event.target._tooltip;
-    if (tooltip && tooltip.parentNode) {
-        tooltip.parentNode.removeChild(tooltip);
-        event.target._tooltip = null;
-    }
+    // Evento de preço final
+    document.getElementById('precoVendaFinal')?.addEventListener('input', function(e) {
+        atualizarPrecoFinal(e.target.value);
+    });
 }
 
 function atualizarProgresso() {
-    const campos = ['empresaNome', 'setorEmpresa', 'nomeProduto', 'publicoAlvo', 'qtdVendaMensal'];
+    const campos = ['empresaNome', 'setorEmpresa', 'nomeProduto', 'qtdVendaMensal'];
     const preenchidos = campos.filter(id => {
         const el = document.getElementById(id);
         return el && el.value && el.value.trim() !== '';
@@ -695,95 +771,43 @@ function atualizarProgresso() {
         bar.style.width = `${progresso}%`;
     }
 }
-// ==================== FUNÇÕES PARA GRÁFICOS ====================
-function inicializarGraficos() {
-    if (window.gerenciadorGraficos && !window.gerenciadorGraficos.inicializado) {
-        window.gerenciadorGraficos.inicializarTodosGraficos();
-    }
-}
 
-function atualizarGraficosComDados() {
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.atualizarTodosGraficosComDados();
-    }
-}
-
-// Adicione ao objeto window
-window.inicializarGraficos = inicializarGraficos;
-window.atualizarGraficosComDados = atualizarGraficosComDados;
-
-// Modifique a função calcularResultados para atualizar gráficos
-function calcularResultados() {
-    try {
-        // ... código existente ...
-        
-        // ATUALIZAR GRÁFICOS APÓS CÁLCULO
-        setTimeout(() => {
-            if (window.gerenciadorGraficos) {
-                window.gerenciadorGraficos.atualizarGraficoComposicao(
-                    preco, 
-                    dadosNegocio.custos.variavelUnitario, 
-                    dadosNegocio.custos.fixoUnitario, 
-                    100
-                );
-                
-                window.gerenciadorGraficos.atualizarGraficoDistribuicaoPreco(
-                    dadosNegocio.custos, 
-                    preco
-                );
-                
-                window.gerenciadorGraficos.atualizarTodosGraficosComDados();
-            }
-        }, 300);
-        
-    } catch (error) {
-        console.error('Erro ao calcular resultados:', error);
-    }
-}
-
+// ==================== FUNÇÕES DE APOIO ====================
 function calcularTudo() {
     calcularCustos();
     setTimeout(() => calcularResultados(), 500);
     setTimeout(() => atualizarDashboard(), 1000);
-    setTimeout(() => gerarRecomendacoes(), 1500);
+    setTimeout(() => {
+        if (window.gerenciadorGraficos) {
+            window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+        }
+    }, 1500);
+    setTimeout(() => gerarRecomendacoes(), 2000);
     setTimeout(() => {
         mostrarToast('✅ Análise completa realizada!', 'success');
-    }, 2000);
-}
-
-function exportarTodosGraficos() {
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.exportarTodosGraficos();
-    } else {
-        mostrarToast('Gráficos não inicializados', 'error');
-    }
-}
-
-function fecharModal() {
-    const modal = document.getElementById('modalGrafico');
-    if (modal) {
-        modal.hidden = true;
-    }
+        openTab('resultados');
+    }, 2500);
 }
 
 // ==================== EXPORTAR FUNÇÕES GLOBAIS ====================
 window.openTab = openTab;
 window.toggleDarkMode = toggleDarkMode;
 window.saveProgress = saveProgress;
-window.atualizarMarkup = atualizarMarkup;
 window.calcularCustos = calcularCustos;
 window.calcularResultados = calcularResultados;
 window.analisarConcorrencia = analisarConcorrencia;
 window.gerarRecomendacoes = gerarRecomendacoes;
 window.atualizarDashboard = atualizarDashboard;
 window.calcularTudo = calcularTudo;
-window.mostrarPassoDados = mostrarPassoDados;
-window.avancarPassoDados = avancarPassoDados;
-window.voltarPassoDados = voltarPassoDados;
-window.salvarRascunho = salvarRascunho;
+window.atualizarMarkup = atualizarMarkup;
 window.atualizarPrecoFinal = atualizarPrecoFinal;
 window.atualizarProjecoes = atualizarProjecoes;
-window.exportarTodosGraficos = exportarTodosGraficos;
-window.fecharModal = fecharModal;
+window.exportarTodosGraficos = function() {
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.exportarTodosGraficos();
+    } else {
+        mostrarToast('Gráficos não inicializados', 'error');
+    }
+};
 
-console.log('✅ Script principal carregado - Calculadora MEI Premium v2.1');
+console.log('✅ Script principal carregado - Calculadora MEI Premium v3.0');
