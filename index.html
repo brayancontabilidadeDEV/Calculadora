@@ -28,7 +28,7 @@
         }
     </script>
     
-    <!-- Chart.js - MOVIDO PARA CIMA -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <!-- Font Awesome -->
@@ -140,29 +140,6 @@
             color: #f3f4f6;
         }
         
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 4px;
-        }
-        
-        .dark ::-webkit-scrollbar-track {
-            background: #334155;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        
-        .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
-        }
-        
         .toast {
             position: fixed;
             top: 1rem;
@@ -230,6 +207,7 @@
         .chart-container {
             position: relative;
             width: 100%;
+            min-height: 300px;
         }
         
         .chart-container-sm {
@@ -242,41 +220,6 @@
         
         .chart-container-lg {
             height: 24rem;
-        }
-        
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 1rem;
-            max-width: 42rem;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .dark .modal-content {
-            background: var(--dark-card);
-        }
-        
-        @media (max-width: 768px) {
-            .whatsapp-float {
-                width: 3rem;
-                height: 3rem;
-                font-size: 1.25rem;
-            }
         }
     </style>
 </head>
@@ -388,7 +331,7 @@
 
     <!-- Conteúdo Principal -->
     <main class="max-w-7xl mx-auto p-4 md:p-6">
-        <!-- Navegação -->
+        <!-- Navegação - CORRIGIDA -->
         <nav class="flex flex-wrap gap-2 mb-6 no-print" aria-label="Navegação principal">
             <button onclick="openTab('dashboard')" 
                     id="tabDashboard" 
@@ -404,11 +347,6 @@
                     id="tabCustos" 
                     class="tab-btn px-4 py-3 rounded-xl font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 hover-lift">
                 <i class="fas fa-money-bill-wave mr-2"></i>Custos
-            </button>
-            <button onclick="openTab('tecnologia')" 
-                    id="tabTecnologia" 
-                    class="tab-btn px-4 py-3 rounded-xl font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 hover-lift">
-                <i class="fas fa-laptop-code mr-2"></i>Tecnologia
             </button>
             <button onclick="openTab('precificacao')" 
                     id="tabPrecificacao" 
@@ -461,47 +399,6 @@
                     </div>
                 </div>
                 
-                <!-- Cenários Demonstrativos -->
-                <div class="glass-card p-6 mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">🎭 Cenários Demonstrativos - Brayan Contabilidade</h3>
-                    <p class="text-gray-800 dark:text-gray-300 mb-4">Clique em um cenário para carregar dados de exemplo e entender como funciona:</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button onclick="carregarCenario('artesanato')" 
-                                class="p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl hover-lift border border-purple-200 dark:border-purple-800">
-                            <div class="font-bold text-purple-800 dark:text-purple-300 mb-2">🎨 Artesanato MEI</div>
-                            <div class="text-sm text-gray-800 dark:text-gray-300">
-                                <div>• Produto: Vaso de Cerâmica</div>
-                                <div>• Custo Unitário: R$ 25</div>
-                                <div>• Preço Sugerido: R$ 75</div>
-                                <div>• Margem: 66%</div>
-                            </div>
-                        </button>
-                        
-                        <button onclick="carregarCenario('consultoria')" 
-                                class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl hover-lift border border-blue-200 dark:border-blue-800">
-                            <div class="font-bold text-blue-800 dark:text-blue-300 mb-2">📊 Consultoria MEI</div>
-                            <div class="text-sm text-gray-800 dark:text-gray-300">
-                                <div>• Serviço: Consultoria Contábil</div>
-                                <div>• Custo/Hora: R$ 30</div>
-                                <div>• Preço Sugerido: R$ 150/h</div>
-                                <div>• Margem: 80%</div>
-                            </div>
-                        </button>
-                        
-                        <button onclick="carregarCenario('alimentos')" 
-                                class="p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl hover-lift border border-green-200 dark:border-green-800">
-                            <div class="font-bold text-green-800 dark:text-green-300 mb-2">🍕 Alimentos MEI</div>
-                            <div class="text-sm text-gray-800 dark:text-gray-300">
-                                <div>• Produto: Bolo Artesanal</div>
-                                <div>• Custo Unitário: R$ 12</div>
-                                <div>• Preço Sugerido: R$ 35</div>
-                                <div>• Margem: 65%</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Resumo Rápido -->
                     <div class="lg:col-span-2">
@@ -549,10 +446,10 @@
                                     <div class="text-sm text-gray-800 dark:text-gray-300 mt-1">Mapear todos os gastos do negócio</div>
                                 </button>
                                 
-                                <button onclick="openTab('tecnologia')" 
+                                <button onclick="openTab('precificacao')" 
                                         class="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl hover-lift border border-purple-200 dark:border-purple-800">
-                                    <div class="font-medium text-purple-800 dark:text-purple-300">3. Custos de Tecnologia</div>
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mt-1">Investimentos em tecnologia e inovação</div>
+                                    <div class="font-medium text-purple-800 dark:text-purple-300">3. Definir Preços</div>
+                                    <div class="text-sm text-gray-800 dark:text-gray-300 mt-1">Calcular preços ideais para seu produto</div>
                                 </button>
                                 
                                 <button onclick="calcularTudo()" 
@@ -595,15 +492,15 @@
                     
                     <div class="glass-card p-6">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="gradient-tech p-3 rounded-lg">
-                                <i class="fas fa-laptop-code text-white text-xl"></i>
+                            <div class="gradient-success p-3 rounded-lg">
+                                <i class="fas fa-chart-line text-white text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-gray-900 dark:text-white">💻 Custos de Tecnologia</h4>
+                                <h4 class="font-bold text-gray-900 dark:text-white">📈 Análise de Mercado</h4>
                             </div>
                         </div>
                         <p class="text-gray-800 dark:text-gray-300 text-sm">
-                            Análise completa dos investimentos em tecnologia: sites, apps, marketing digital, softwares e suporte.
+                            Compare seus preços com a concorrência e encontre a posição ideal no mercado.
                         </p>
                     </div>
                     
@@ -644,206 +541,171 @@
 
             <!-- Dados Básicos -->
             <section id="dados" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
-            </section>
-
-            <!-- Custos -->
-            <section id="custos" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
-            </section>
-
-            <!-- Tecnologia -->
-            <section id="tecnologia" class="tab-content" hidden>
                 <div class="glass-card p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">💻 Custos de Tecnologia</h2>
-                    <p class="text-gray-800 dark:text-gray-300 mb-6">Analise seus investimentos em tecnologia para otimizar e planejar melhor seu negócio digital.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">📝 Dados Básicos do Negócio</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Preencha as informações fundamentais sobre seu negócio MEI.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <!-- Custos de Desenvolvimento -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Dados da Empresa -->
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🚀 Desenvolvimento & Infraestrutura</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🏢 Dados da Empresa</h3>
                             <div class="space-y-4">
                                 <div class="input-group">
-                                    <label for="custoSite" class="floating-label">Site/E-commerce (R$/mês)</label>
-                                    <input type="number" id="custoSite" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Hospedagem, domínio, manutenção</div>
+                                    <label for="empresaNome" class="floating-label">Nome da Empresa</label>
+                                    <input type="text" id="empresaNome" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
                                 </div>
                                 
                                 <div class="input-group">
-                                    <label for="custoApp" class="floating-label">Aplicativo Mobile (R$/mês)</label>
-                                    <input type="number" id="custoApp" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Desenvolvimento e manutenção</div>
+                                    <label for="setorEmpresa" class="floating-label">Setor de Atuação</label>
+                                    <select id="setorEmpresa" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
+                                        <option value="">Selecione o setor</option>
+                                        <option value="comercio">Comércio</option>
+                                        <option value="servicos">Serviços</option>
+                                        <option value="industria">Indústria</option>
+                                        <option value="alimentacao">Alimentação</option>
+                                        <option value="consultoria">Consultoria</option>
+                                        <option value="artesanato">Artesanato</option>
+                                        <option value="tecnologia">Tecnologia</option>
+                                        <option value="saude">Saúde e Beleza</option>
+                                        <option value="educacao">Educação</option>
+                                        <option value="outros">Outros</option>
+                                    </select>
                                 </div>
                                 
                                 <div class="input-group">
-                                    <label for="custoInfra" class="floating-label">Infraestrutura Cloud (R$/mês)</label>
-                                    <input type="number" id="custoInfra" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Servidores, armazenamento, backup</div>
+                                    <label for="tempoMercado" class="floating-label">Tempo no Mercado</label>
+                                    <select id="tempoMercado" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
+                                        <option value="">Selecione</option>
+                                        <option value="iniciante">Iniciante (0-6 meses)</option>
+                                        <option value="estabilizacao">Estabilização (6-24 meses)</option>
+                                        <option value="crescimento">Crescimento (2-5 anos)</option>
+                                        <option value="consolidado">Consolidado (+5 anos)</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Custos de Marketing Digital -->
+                        <!-- Dados do Produto -->
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📢 Marketing & Ferramentas Digitais</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📦 Dados do Produto/Serviço</h3>
                             <div class="space-y-4">
                                 <div class="input-group">
-                                    <label for="custoMarketing" class="floating-label">Marketing Digital (R$/mês)</label>
-                                    <input type="number" id="custoMarketing" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Google Ads, Meta Ads, influenciadores</div>
+                                    <label for="nomeProduto" class="floating-label">Nome do Produto/Serviço</label>
+                                    <input type="text" id="nomeProduto" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
                                 </div>
                                 
                                 <div class="input-group">
-                                    <label for="custoSoftwares" class="floating-label">Softwares & Ferramentas (R$/mês)</label>
-                                    <input type="number" id="custoSoftwares" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">CRM, ERP, design, produtividade</div>
+                                    <label for="categoriaProduto" class="floating-label">Categoria</label>
+                                    <input type="text" id="categoriaProduto" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
                                 </div>
                                 
                                 <div class="input-group">
-                                    <label for="custoSeguranca" class="floating-label">Segurança Digital (R$/mês)</label>
-                                    <input type="number" id="custoSeguranca" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Antivírus, firewall, certificados SSL</div>
+                                    <label for="qtdVendaMensal" class="floating-label">Quantidade Vendida por Mês</label>
+                                    <input type="number" id="qtdVendaMensal" value="100" min="1" step="1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Custos Adicionais -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🔧 Custos Adicionais</h3>
+                    <!-- Botões de Navegação -->
+                    <div class="flex justify-between mt-8">
+                        <button onclick="openTab('dashboard')" 
+                                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                        <button onclick="openTab('custos')" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            Próximo: Custos <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Custos -->
+            <section id="custos" class="tab-content" hidden>
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">💰 Análise de Custos</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Calcule todos os custos envolvidos na produção do seu produto ou serviço.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Custos Variáveis -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📦 Custos Variáveis (Por Unidade)</h3>
+                            <div class="space-y-4">
+                                <div class="input-group">
+                                    <label for="materiaPrima" class="floating-label">Matéria-Prima/Insumos (R$)</label>
+                                    <input type="number" id="materiaPrima" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustos()">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label for="embalagem" class="floating-label">Embalagem (R$)</label>
+                                    <input type="number" id="embalagem" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustos()">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label for="frete" class="floating-label">Frete/Entrega (R$)</label>
+                                    <input type="number" id="frete" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustos()">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Custos Fixos -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🏢 Custos Fixos (Mensais)</h3>
+                            <div class="space-y-4">
+                                <div class="input-group">
+                                    <label for="aluguel" class="floating-label">Aluguel/Manutenção (R$)</label>
+                                    <input type="number" id="aluguel" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustos()">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label for="salarios" class="floating-label">Salários/Pró-labore (R$)</label>
+                                    <input type="number" id="salarios" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustos()">
+                                </div>
+                                
+                                <div class="input-group">
+                                    <label for="das" class="floating-label">DAS/Impostos (R$)</label>
+                                    <input type="number" id="das" value="70.90" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustos()">
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Valor base do DAS MEI 2024</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumo dos Custos -->
+                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📊 Resumo dos Custos</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="input-group">
-                                <label for="custoSuporte" class="floating-label">Suporte Técnico (R$/mês)</label>
-                                <input type="number" id="custoSuporte" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Custo Unitário Total</div>
+                                <div id="resumoCustoUnitario" class="text-xl font-bold text-blue-700 dark:text-blue-400">R$ 0,00</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Por unidade produzida</div>
                             </div>
                             
-                            <div class="input-group">
-                                <label for="custoEquipamentos" class="floating-label">Equipamentos (R$/mês)</label>
-                                <input type="number" id="custoEquipamentos" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Custo Fixo Mensal</div>
+                                <div id="resumoCustoFixo" class="text-xl font-bold text-purple-700 dark:text-purple-400">R$ 70,90</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Custos fixos por mês</div>
                             </div>
                             
-                            <div class="input-group">
-                                <label for="custoOutrosTech" class="floating-label">Outros Custos Tech (R$/mês)</label>
-                                <input type="number" id="custoOutrosTech" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="calcularCustosTecnologia()">
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Custo Total Mensal</div>
+                                <div id="resumoCustoTotal" class="text-xl font-bold text-green-700 dark:text-green-400">R$ 70,90</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Considerando produção mensal</div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Resumo dos Custos de Tecnologia -->
-                    <div class="mt-6 p-6 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📊 Resumo dos Custos de Tecnologia</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Total Mensal</div>
-                                <div id="totalTecnologiaMensal" class="text-xl font-bold text-purple-700 dark:text-purple-400">R$ 0,00</div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Investimento mensal</div>
-                            </div>
-                            
-                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Por Unidade</div>
-                                <div id="tecnologiaPorUnidade" class="text-xl font-bold text-blue-700 dark:text-blue-400">R$ 0,00</div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Custo unitário</div>
-                            </div>
-                            
-                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">% do Custo Total</div>
-                                <div id="percentualTecnologia" class="text-xl font-bold text-green-700 dark:text-green-400">0%</div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">do custo mensal</div>
-                            </div>
-                            
-                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">ROI Esperado</div>
-                                <div id="roiTecnologia" class="text-xl font-bold text-orange-700 dark:text-orange-400">0%</div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Retorno sobre investimento</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Recomendações de Tecnologia -->
-                    <div class="mt-6 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💡 Recomendações da Brayan Contabilidade</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <h4 class="font-medium text-blue-900 dark:text-blue-300 mb-2">📈 Para Micro e Pequenos Negócios:</h4>
-                                <ul class="space-y-1 text-sm text-blue-800 dark:text-blue-400">
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                        <span>Invista até 10% do faturamento em tecnologia</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                        <span>Comece com site simples e redes sociais</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                        <span>Use ferramentas gratuitas no início</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            
-                            <div>
-                                <h4 class="font-medium text-blue-900 dark:text-blue-300 mb-2">🚀 Para Negócios em Crescimento:</h4>
-                                <ul class="space-y-1 text-sm text-blue-800 dark:text-blue-400">
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                        <span>Invista 15-20% do faturamento em tecnologia</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                        <span>Considere e-commerce e automação</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                        <span>Implemente CRM e análise de dados</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tabela de ROI de Tecnologia -->
-                    <div class="mt-6">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📈 ROI Esperado por Tipo de Investimento</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-                                <thead class="bg-gray-100 dark:bg-gray-700">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Tecnologia</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">ROI Típico</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Tempo de Retorno</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Impacto no Negócio</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Site/E-commerce</td>
-                                        <td class="px-4 py-3 text-sm font-medium text-green-600 dark:text-green-400">150-300%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">3-6 meses</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Alto - Aumenta alcance e vendas</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Marketing Digital</td>
-                                        <td class="px-4 py-3 text-sm font-medium text-green-600 dark:text-green-400">200-500%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">1-3 meses</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Muito Alto - Geração direta de leads</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Softwares de Gestão</td>
-                                        <td class="px-4 py-3 text-sm font-medium text-blue-600 dark:text-blue-400">50-100%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">6-12 meses</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Médio - Economia de tempo e recursos</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Infraestrutura Cloud</td>
-                                        <td class="px-4 py-3 text-sm font-medium text-yellow-600 dark:text-yellow-400">30-80%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">12-24 meses</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Baixo - Suporte e segurança</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <!-- Botões de Navegação -->
+                    <div class="flex justify-between mt-8">
+                        <button onclick="openTab('dados')" 
+                                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                        <button onclick="openTab('precificacao')" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            Próximo: Precificação <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -851,673 +713,519 @@
             <!-- Precificação -->
             <section id="precificacao" class="tab-content" hidden>
                 <div class="glass-card p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">🏷️ Métodos de Precificação Avançados</h2>
-                    <p class="text-gray-800 dark:text-gray-300 mb-6">Escolha o método de precificação mais adequado para seu negócio e setor.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">🏷️ Precificação por Markup</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Defina o markup desejado sobre seus custos para calcular o preço de venda ideal.</p>
                     
-                    <!-- Seleção de Método -->
                     <div class="mb-6">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Selecione o Método de Precificação:</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
-                            <button onclick="selecionarMetodo('markup')" 
-                                    id="btnMarkup" 
-                                    class="p-3 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition">
-                                <i class="fas fa-percentage mr-2"></i>Markup
-                            </button>
-                            <button onclick="selecionarMetodo('margem')" 
-                                    id="btnMargem" 
-                                    class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-chart-pie mr-2"></i>Margem de Contribuição
-                            </button>
-                            <button onclick="selecionarMetodo('valor')" 
-                                    id="btnValor" 
-                                    class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-star mr-2"></i>Valor Percebido
-                            </button>
-                            <button onclick="selecionarMetodo('concorrencia')" 
-                                    id="btnConcorrencia" 
-                                    class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-users mr-2"></i>Concorrência
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <button onclick="selecionarMetodo('roi')" 
-                                    id="btnRoi" 
-                                    class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-chart-line mr-2"></i>ROI
-                            </button>
-                            <button onclick="selecionarMetodo('bundling')" 
-                                    id="btnBundling" 
-                                    class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-box mr-2"></i>Bundling
-                            </button>
-                            <button onclick="selecionarMetodo('premium')" 
-                                    id="btnPremium" 
-                                    class="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-crown mr-2"></i>Premium
-                            </button>
+                        <label for="markupSlider" class="block text-gray-800 dark:text-gray-300 mb-2">Markup (% sobre custo): <span id="markupValue" class="font-bold text-blue-600 dark:text-blue-400">100%</span></label>
+                        <input type="range" id="markupSlider" min="0" max="500" value="100" class="w-full custom-slider" oninput="atualizarMarkup(this.value)">
+                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            <span>0% (Custo)</span>
+                            <span>100% (Recomendado)</span>
+                            <span>500% (Premium)</span>
                         </div>
                     </div>
                     
-                    <!-- Método Ativo -->
-                    <div id="metodoMarkup" class="metodo-ativo">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
-                                <span class="font-bold text-blue-800 dark:text-blue-300">📊 Método Markup (Recomendado para Iniciantes)</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Adicione uma porcentagem fixa sobre o custo para determinar o preço de venda.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label for="markupSlider" class="block text-gray-800 dark:text-gray-300 mb-2">Markup (% sobre custo): <span id="markupValue" class="font-bold">100%</span></label>
-                            <input type="range" id="markupSlider" min="0" max="500" value="100" class="w-full custom-slider" oninput="atualizarMarkup(this.value)">
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📈 Preços Sugeridos</h3>
-                                <div class="space-y-3">
-                                    <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                                        <span class="text-gray-800 dark:text-gray-300">Mínimo (1.5x)</span>
-                                        <span id="precoMarkupMin" class="font-bold text-red-700 dark:text-red-400">R$ 0,00</span>
-                                    </div>
-                                    
-                                    <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                                        <span class="text-gray-800 dark:text-gray-300">Médio (2.0x)</span>
-                                        <span id="precoMarkupMedio" class="font-bold text-yellow-700 dark:text-yellow-400">R$ 0,00</span>
-                                    </div>
-                                    
-                                    <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                                        <span class="text-gray-800 dark:text-gray-300">Máximo (3.0x)</span>
-                                        <span id="precoMarkupMax" class="font-bold text-green-700 dark:text-green-400">R$ 0,00</span>
-                                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <!-- Preços Sugeridos -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📈 Preços Sugeridos</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Mínimo (1.5x)</span>
+                                    <span id="precoMarkupMin" class="font-bold text-red-700 dark:text-red-400">R$ 0,00</span>
+                                </div>
+                                
+                                <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Médio (2.0x)</span>
+                                    <span id="precoMarkupMedio" class="font-bold text-yellow-700 dark:text-yellow-400">R$ 0,00</span>
+                                </div>
+                                
+                                <div class="flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Máximo (3.0x)</span>
+                                    <span id="precoMarkupMax" class="font-bold text-green-700 dark:text-green-400">R$ 0,00</span>
                                 </div>
                             </div>
-                            
-                            <div class="md:col-span-2">
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💡 Preço Final Sugerido</h3>
-                                <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-2">Com base nos seus custos e markup</div>
-                                    <div id="precoFinalSugerido" class="text-2xl font-bold text-green-700 dark:text-green-400">R$ 0,00</div>
-                                    <div class="mt-3">
-                                        <label for="precoVendaFinal" class="block text-sm text-gray-800 dark:text-gray-300 mb-2">Defina seu preço final:</label>
-                                        <input type="number" id="precoVendaFinal" value="0" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition text-center text-lg font-bold" oninput="atualizarPrecoFinal(this.value)">
-                                    </div>
+                        </div>
+                        
+                        <!-- Preço Final -->
+                        <div class="md:col-span-2">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💡 Preço Final Sugerido</h3>
+                            <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl text-center">
+                                <div class="text-sm text-gray-800 dark:text-gray-300 mb-2">Com base nos seus custos e markup selecionado</div>
+                                <div id="precoFinalSugerido" class="text-3xl font-bold text-green-700 dark:text-green-400">R$ 0,00</div>
+                                <div class="mt-4">
+                                    <label for="precoVendaFinal" class="block text-sm text-gray-800 dark:text-gray-300 mb-2">Defina seu preço final de venda:</label>
+                                    <input type="number" id="precoVendaFinal" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition text-center text-lg font-bold" oninput="atualizarPrecoFinal(this.value)">
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Método Margem de Contribuição -->
-                    <div id="metodoMargem" class="metodo-ativo hidden">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
-                                <span class="font-bold text-purple-800 dark:text-purple-300">📈 Método Margem de Contribuição</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Foque na margem que cada produto traz após cobrir os custos variáveis.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">⚙️ Configuração</h3>
-                                <div class="space-y-4">
-                                    <div class="input-group">
-                                        <label for="margemDesejada" class="floating-label">Margem de Contribuição Desejada (%)</label>
-                                        <input type="number" id="margemDesejada" value="60" min="0" max="100" step="1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition" oninput="calcularPrecoMargem()">
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="custoVariavelUnitario" class="floating-label">Custo Variável Unitário (R$)</label>
-                                        <input type="number" id="custoVariavelUnitario" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition" oninput="calcularPrecoMargem()">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💡 Resultado</h3>
-                                <div class="p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
-                                    <div class="text-center">
-                                        <div class="text-sm text-gray-800 dark:text-gray-300 mb-2">Preço Calculado por Margem</div>
-                                        <div id="precoMargem" class="text-2xl font-bold text-purple-700 dark:text-purple-400">R$ 0,00</div>
-                                        <div class="mt-2 text-sm text-gray-800 dark:text-gray-300">
-                                            <div>Margem de Contribuição: <span id="margemCalculada" class="font-bold">0%</span></div>
-                                            <div>Cobertura de Custo Fixo: <span id="coberturaFixo" class="font-bold">0 unidades</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl">
-                            <h4 class="font-medium text-blue-900 dark:text-blue-300 mb-2">💡 Quando usar Margem de Contribuição:</h4>
-                            <p class="text-sm text-blue-800 dark:text-blue-400">
-                                Ideal para empresas com múltiplos produtos, onde cada um deve contribuir para cobrir os custos fixos. 
-                                Excelente para tomada de decisão sobre continuidade de produtos.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Método Valor Percebido -->
-                    <div id="metodoValor" class="metodo-ativo hidden">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-xl">
-                                <span class="font-bold text-yellow-800 dark:text-yellow-300">⭐ Método Valor Percebido</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Baseie o preço no valor que o cliente percebe no seu produto/serviço.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🎯 Avaliação de Valor</h3>
-                                <div class="space-y-4">
-                                    <div class="input-group">
-                                        <label for="economiaCliente" class="floating-label">Economia/Receita Gerada ao Cliente (R$)</label>
-                                        <input type="number" id="economiaCliente" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition" oninput="calcularPrecoValor()">
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="percentualValor" class="floating-label">% do Valor a Cobrar (%)</label>
-                                        <input type="number" id="percentualValor" value="20" min="0" max="100" step="1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition" oninput="calcularPrecoValor()">
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="diferencialProduto" class="floating-label">Diferencial Competitivo (%)</label>
-                                        <select id="diferencialProduto" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition" oninput="calcularPrecoValor()">
-                                            <option value="10">Baixo (10%)</option>
-                                            <option value="25" selected>Médio (25%)</option>
-                                            <option value="40">Alto (40%)</option>
-                                            <option value="60">Muito Alto (60%)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💰 Precificação por Valor</h3>
-                                <div class="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-xl">
-                                    <div class="space-y-4">
-                                        <div>
-                                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Valor Gerado ao Cliente</div>
-                                            <div id="valorGerado" class="text-xl font-bold text-green-700 dark:text-green-400">R$ 0,00</div>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Preço por Valor Percebido</div>
-                                            <div id="precoValor" class="text-2xl font-bold text-yellow-700 dark:text-yellow-400">R$ 0,00</div>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Multiplicador sobre Custo</div>
-                                            <div id="multiplicadorValor" class="text-xl font-bold text-blue-700 dark:text-blue-400">0x</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Método Concorrência -->
-                    <div id="metodoConcorrencia" class="metodo-ativo hidden">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
-                                <span class="font-bold text-red-800 dark:text-red-300">🏆 Método Baseado na Concorrência</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Ajuste seus preços com base no mercado e posição competitiva.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div class="input-group">
-                                <label for="precoMedioMercado" class="floating-label">Preço Médio de Mercado (R$)</label>
-                                <input type="number" id="precoMedioMercado" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition" oninput="calcularPrecoConcorrencia()">
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="posicionamentoMercado" class="floating-label">Posicionamento Desejado</label>
-                                <select id="posicionamentoMercado" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition" oninput="calcularPrecoConcorrencia()">
-                                    <option value="0.7">Líder em Preço (70%)</option>
-                                    <option value="0.9">Abaixo da Média (90%)</option>
-                                    <option value="1.0" selected>Na Média (100%)</option>
-                                    <option value="1.1">Acima da Média (110%)</option>
-                                    <option value="1.3">Premium (130%)</option>
-                                    <option value="1.5">Luxo/Exclusivo (150%)</option>
-                                </select>
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="diferencialConcorrencia" class="floating-label">Diferencial vs Concorrência (%)</label>
-                                <input type="number" id="diferencialConcorrencia" value="10" min="0" max="100" step="1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition" oninput="calcularPrecoConcorrencia()">
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="p-4 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Preço por Concorrência</div>
-                                    <div id="precoConcorrencia" class="text-2xl font-bold text-red-700 dark:text-red-400">R$ 0,00</div>
-                                    <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">Posição: <span id="posicaoCalculada">Na Média</span></div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Margem sobre Concorrência</div>
-                                    <div id="margemConcorrencia" class="text-2xl font-bold text-blue-700 dark:text-blue-400">0%</div>
-                                    <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">vs. preço médio</div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Vantagem Competitiva</div>
-                                    <div id="vantagemCompetitivaCalc" class="text-2xl font-bold text-green-700 dark:text-green-400">Nenhuma</div>
-                                    <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">Baseado em diferencial</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Método ROI -->
-                    <div id="metodoRoi" class="metodo-ativo hidden">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
-                                <span class="font-bold text-green-800 dark:text-green-300">📈 Método Retorno sobre Investimento (ROI)</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Calcule o preço baseado no retorno desejado sobre o investimento.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💰 Investimento e Retorno</h3>
-                                <div class="space-y-4">
-                                    <div class="input-group">
-                                        <label for="investimentoTotal" class="floating-label">Investimento Total (R$)</label>
-                                        <input type="number" id="investimentoTotal" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition" oninput="calcularPrecoRoi()">
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="roiDesejado" class="floating-label">ROI Anual Desejado (%)</label>
-                                        <input type="number" id="roiDesejado" value="30" min="0" max="500" step="1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition" oninput="calcularPrecoRoi()">
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="prazoRetorno" class="floating-label">Prazo de Retorno (meses)</label>
-                                        <input type="number" id="prazoRetorno" value="24" min="1" max="120" step="1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition" oninput="calcularPrecoRoi()">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📊 Cálculo de ROI</h3>
-                                <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
-                                    <div class="space-y-3">
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">Retorno Mensal Necessário:</span>
-                                            <span id="retornoMensal" class="font-bold text-green-700 dark:text-green-400">R$ 0,00</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">Lucro Unitário Necessário:</span>
-                                            <span id="lucroUnitarioRoi" class="font-bold text-blue-700 dark:text-blue-400">R$ 0,00</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">Preço por ROI:</span>
-                                            <span id="precoRoi" class="text-xl font-bold text-green-700 dark:text-green-400">R$ 0,00</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">ROI Mensal:</span>
-                                            <span id="roiMensal" class="font-bold text-purple-700 dark:text-purple-400">0%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Método Bundling -->
-                    <div id="metodoBundling" class="metodo-ativo hidden">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl">
-                                <span class="font-bold text-indigo-800 dark:text-indigo-300">📦 Método Bundling (Pacotes)</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Crie pacotes de produtos/serviços com preços atrativos.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div class="input-group">
-                                <label for="precoIndividual1" class="floating-label">Preço Produto 1 (R$)</label>
-                                <input type="number" id="precoIndividual1" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" oninput="calcularBundling()">
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="precoIndividual2" class="floating-label">Preço Produto 2 (R$)</label>
-                                <input type="number" id="precoIndividual2" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" oninput="calcularBundling()">
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="precoIndividual3" class="floating-label">Preço Produto 3 (R$)</label>
-                                <input type="number" id="precoIndividual3" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition" oninput="calcularBundling()">
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="p-4 bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Total Individual</div>
-                                    <div id="totalIndividual" class="text-xl font-bold text-indigo-700 dark:text-indigo-400">R$ 0,00</div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Pacote Básico (15% off)</div>
-                                    <div id="pacoteBasico" class="text-2xl font-bold text-green-700 dark:text-green-400">R$ 0,00</div>
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Economia: <span id="economiaBasico">R$ 0,00</span></div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Pacote Premium (25% off)</div>
-                                    <div id="pacotePremium" class="text-2xl font-bold text-blue-700 dark:text-blue-400">R$ 0,00</div>
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Economia: <span id="economiaPremium">R$ 0,00</span></div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
-                                <div class="text-center">
-                                    <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Pacote Completo (35% off)</div>
-                                    <div id="pacoteCompleto" class="text-2xl font-bold text-purple-700 dark:text-purple-400">R$ 0,00</div>
-                                    <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Economia: <span id="economiaCompleto">R$ 0,00</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Método Premium -->
-                    <div id="metodoPremium" class="metodo-ativo hidden">
-                        <div class="mb-6">
-                            <div class="p-4 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl">
-                                <span class="font-bold text-amber-800 dark:text-amber-300">👑 Método Premium/Luxo</span>
-                                <p class="text-sm text-gray-800 dark:text-gray-300 mt-1">Precificação para produtos/serviços de alta qualidade e exclusividade.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">⭐ Fatores de Premiumização</h3>
-                                <div class="space-y-4">
-                                    <div class="input-group">
-                                        <label for="qualidadeProduto" class="floating-label">Qualidade do Produto (1-10)</label>
-                                        <input type="range" id="qualidadeProduto" min="1" max="10" value="5" class="w-full custom-slider" oninput="atualizarValorPremium('qualidade')">
-                                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                                            <span>Básico</span>
-                                            <span id="valorQualidade">5</span>
-                                            <span>Excelente</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="exclusividade" class="floating-label">Exclusividade (1-10)</label>
-                                        <input type="range" id="exclusividade" min="1" max="10" value="5" class="w-full custom-slider" oninput="atualizarValorPremium('exclusividade')">
-                                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                                            <span>Comum</span>
-                                            <span id="valorExclusividade">5</span>
-                                            <span>Exclusivo</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="marca" class="floating-label">Força da Marca (1-10)</label>
-                                        <input type="range" id="marca" min="1" max="10" value="5" class="w-full custom-slider" oninput="atualizarValorPremium('marca')">
-                                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                                            <span>Desconhecida</span>
-                                            <span id="valorMarca">5</span>
-                                            <span>Reconhecida</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <label for="experiencia" class="floating-label">Experiência do Cliente (1-10)</label>
-                                        <input type="range" id="experiencia" min="1" max="10" value="5" class="w-full custom-slider" oninput="atualizarValorPremium('experiencia')">
-                                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                                            <span>Básica</span>
-                                            <span id="valorExperiencia">5</span>
-                                            <span>Excepcional</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">💰 Precificação Premium</h3>
-                                <div class="p-4 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl">
-                                    <div class="text-center mb-4">
-                                        <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Score de Premiumização</div>
-                                        <div id="scorePremium" class="text-3xl font-bold text-amber-700 dark:text-amber-400">50/100</div>
-                                        <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                            <span id="nivelPremium" class="font-medium">Padrão</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="space-y-3">
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">Multiplicador Premium:</span>
-                                            <span id="multiplicadorPremium" class="font-bold text-green-700 dark:text-green-400">2.0x</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">Preço Premium Sugerido:</span>
-                                            <span id="precoPremium" class="text-2xl font-bold text-amber-700 dark:text-amber-400">R$ 0,00</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-800 dark:text-gray-300">Acréscimo sobre Custo:</span>
-                                            <span id="acrescimoPremium" class="font-bold text-purple-700 dark:text-purple-400">0%</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-4 p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                        <div class="text-sm text-gray-800 dark:text-gray-300">
-                                            <span class="font-medium">Recomendação:</span> 
-                                            <span id="recomendacaoPremium">Ajuste fatores para aumentar valor percebido</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Comparação entre Métodos -->
-                    <div class="mt-8 p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/20 dark:to-gray-700/20 rounded-xl">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📊 Comparação entre Métodos de Precificação</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-                                <thead class="bg-gray-100 dark:bg-gray-700">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Método</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Preço Sugerido</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Margem</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Melhor para</th>
-                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-800 dark:text-gray-300">Risco</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-blue-700 dark:text-blue-400">Markup</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="comparacaoMarkup">R$ 0,00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="margemMarkup">0%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Iniciantes, produtos físicos</td>
-                                        <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">Baixo</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-purple-700 dark:text-purple-400">Margem</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="comparacaoMargem">R$ 0,00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="margemMargem">0%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Múltiplos produtos, indústria</td>
-                                        <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300">Médio</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-yellow-700 dark:text-yellow-400">Valor</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="comparacaoValor">R$ 0,00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="margemValor">0%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Serviços, diferenciais únicos</td>
-                                        <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded-full bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-300">Alto</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-red-700 dark:text-red-400">Concorrência</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="comparacaoConcorrencia">R$ 0,00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300" id="margemConcorrenciaTab">0%</td>
-                                        <td class="px-4 py-3 text-sm text-gray-800 dark:text-gray-300">Mercados competitivos</td>
-                                        <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300">Médio</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="mt-4 text-center">
-                            <button onclick="compararTodosMetodos()" 
-                                    class="px-6 py-3 gradient-primary text-white rounded-xl font-medium hover-lift">
-                                <i class="fas fa-sync-alt mr-2"></i> Comparar Todos os Métodos
-                            </button>
-                        </div>
+                    <!-- Botões de Navegação -->
+                    <div class="flex justify-between mt-8">
+                        <button onclick="openTab('custos')" 
+                                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                        <button onclick="calcularResultados(); openTab('resultados');" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            Calcular Resultados <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Mercado -->
             <section id="mercado" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">🏆 Análise de Mercado</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Compare seus preços com a concorrência e posicione-se estrategicamente.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="input-group">
+                            <label for="precoMinConcorrencia" class="floating-label">Preço Mais Barato (R$)</label>
+                            <input type="number" id="precoMinConcorrencia" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="analisarConcorrencia()">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="precoMedioConcorrencia" class="floating-label">Preço Médio (R$)</label>
+                            <input type="number" id="precoMedioConcorrencia" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="analisarConcorrencia()">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="precoMaxConcorrencia" class="floating-label">Preço Mais Caro (R$)</label>
+                            <input type="number" id="precoMaxConcorrencia" value="0" min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="analisarConcorrencia()">
+                        </div>
+                    </div>
+                    
+                    <!-- Resultados da Análise -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Diferença vs Média</div>
+                            <div id="diferencaMedia" class="text-xl font-bold text-blue-700 dark:text-blue-400">0%</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Espaço para Aumento</div>
+                            <div id="espacoAumento" class="text-xl font-bold text-green-700 dark:text-green-400">0%</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Posição no Mercado</div>
+                            <div id="posicaoMercado" class="text-xl font-bold text-purple-700 dark:text-purple-400">N/A</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Recomendação</div>
+                            <div id="recomendacaoMercado" class="text-sm font-bold text-red-700 dark:text-red-400">Analisar dados</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botão de Análise -->
+                    <div class="text-center">
+                        <button onclick="analisarConcorrencia()" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            <i class="fas fa-chart-bar mr-2"></i> Analisar Posição no Mercado
+                        </button>
+                    </div>
+                </div>
             </section>
 
             <!-- Resultados -->
             <section id="resultados" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">📊 Resultados Financeiros</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Veja os resultados da sua precificação e planejamento financeiro.</p>
+                    
+                    <!-- KPIs -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Faturamento Mensal</div>
+                            <div id="kpiFaturamento" class="text-2xl font-bold text-blue-700 dark:text-blue-400">R$ 0</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Lucro Mensal</div>
+                            <div id="kpiLucro" class="text-2xl font-bold text-green-700 dark:text-green-400">R$ 0</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Margem de Lucro</div>
+                            <div id="kpiMargem" class="text-2xl font-bold text-purple-700 dark:text-purple-400">0%</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Ponto de Equilíbrio</div>
+                            <div id="kpiPontoEquilibrio" class="text-2xl font-bold text-orange-700 dark:text-orange-400">0</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400">unidades/mês</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalhamento -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📈 Detalhamento Financeiro</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Receita Bruta</span>
+                                    <span id="detalheReceita" class="font-bold text-green-700 dark:text-green-400">R$ 0,00</span>
+                                </div>
+                                
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Custos Variáveis</span>
+                                    <span id="detalheCustosVar" class="font-bold text-red-700 dark:text-red-400">R$ 0,00</span>
+                                </div>
+                                
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Custos Fixos</span>
+                                    <span id="detalheCustosFixos" class="font-bold text-yellow-700 dark:text-yellow-400">R$ 0,00</span>
+                                </div>
+                                
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Impostos (15%)</span>
+                                    <span id="detalheImpostos" class="font-bold text-purple-700 dark:text-purple-400">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🎯 Indicadores de Performance</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Lucro por Unidade</span>
+                                    <span id="indicadorLucroUnitario" class="font-bold text-green-700 dark:text-green-400">R$ 0,00</span>
+                                </div>
+                                
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Margem Bruta</span>
+                                    <span id="indicadorMargemBruta" class="font-bold text-blue-700 dark:text-blue-400">0%</span>
+                                </div>
+                                
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">ROI Mensal</span>
+                                    <span id="indicadorROI" class="font-bold text-purple-700 dark:text-purple-400">0%</span>
+                                </div>
+                                
+                                <div class="flex justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <span class="text-gray-800 dark:text-gray-300">Break-even (Dias)</span>
+                                    <span id="indicadorBreakEven" class="font-bold text-orange-700 dark:text-orange-400">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="flex flex-wrap gap-3 justify-center mt-8">
+                        <button onclick="openTab('graficos')" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            <i class="fas fa-chart-pie mr-2"></i> Ver Gráficos
+                        </button>
+                        
+                        <button onclick="openTab('projecoes')" 
+                                class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium hover-lift">
+                            <i class="fas fa-chart-line mr-2"></i> Ver Projeções
+                        </button>
+                        
+                        <button onclick="gerarRecomendacoes(); openTab('recomendacoes');" 
+                                class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium hover-lift">
+                            <i class="fas fa-bullseye mr-2"></i> Plano de Ação
+                        </button>
+                    </div>
+                </div>
             </section>
 
-           <!-- Gráficos -->
-<section id="graficos" class="tab-content" hidden>
-    <div class="glass-card p-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">📊 Análise Gráfica Completa</h2>
-                <p class="text-gray-800 dark:text-gray-300">
-                    Visualize todos os dados do seu negócio através de gráficos interativos.
-                </p>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="exportarTodosGraficos()" 
-                        class="px-4 py-2 gradient-primary text-white rounded-lg font-medium hover-lift flex items-center gap-2">
-                    <i class="fas fa-download"></i>
-                    Exportar Todos
-                </button>
-                <button onclick="window.gerenciadorGraficos.atualizarCoresDarkMode()" 
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Linha 1 de Gráficos -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Composição de Preço -->
-            <div class="glass-card p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🧩 Composição do Preço</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    Como seu preço é formado (custo variável, fixo, impostos e lucro)
-                </p>
-                <div class="chart-container chart-container-md">
-                    <canvas id="graficoComposicaoPreco"></canvas>
+            <!-- Gráficos -->
+            <section id="graficos" class="tab-content" hidden>
+                <div class="glass-card p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">📊 Análise Gráfica Completa</h2>
+                            <p class="text-gray-800 dark:text-gray-300">
+                                Visualize todos os dados do seu negócio através de gráficos interativos.
+                            </p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="exportarTodosGraficos()" 
+                                    class="px-4 py-2 gradient-primary text-white rounded-lg font-medium hover-lift flex items-center gap-2">
+                                <i class="fas fa-download"></i>
+                                Exportar Todos
+                            </button>
+                            <button onclick="window.gerenciadorGraficos.atualizarCoresDarkMode()" 
+                                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha 1 de Gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Composição de Preço -->
+                        <div class="glass-card p-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🧩 Composição do Preço</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Como seu preço é formado (custo variável, fixo, impostos e lucro)
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="graficoComposicaoPreco"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Distribuição de Preço -->
+                        <div class="glass-card p-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📊 Distribuição do Preço</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Detalhamento de todos os componentes do custo
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="graficoDistribuicaoPreco"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha 2 de Gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Comparação com Concorrência -->
+                        <div class="glass-card p-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏆 Comparação com Concorrência</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Seu preço vs concorrentes no mercado
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="graficoComparacaoConcorrenciaGraficos"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Evolução do Lucro -->
+                        <div class="glass-card p-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📈 Evolução do Lucro</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Lucro e faturamento ao longo do tempo
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="graficoEvolucaoLucro"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha 3 de Gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Ponto de Equilíbrio -->
+                        <div class="glass-card p-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">⚖️ Ponto de Equilíbrio</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Quantidade necessária para cobrir custos
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="graficoPontoEquilibrio"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Projeção de Faturamento -->
+                        <div class="glass-card p-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🚀 Projeção de Faturamento</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Previsão de crescimento dos próximos meses
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="graficoProjecaoFaturamento"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Última linha -->
+                    <div class="glass-card p-4">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">💰 Projeção de Lucro</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                            Expectativa de lucro nos próximos meses
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="graficoProjecaoLucro"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Navegação -->
+                    <div class="flex justify-between mt-8">
+                        <button onclick="openTab('resultados')" 
+                                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                        <button onclick="openTab('projecoes')" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            Próximo: Projeções <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Distribuição de Preço -->
-            <div class="glass-card p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📊 Distribuição do Preço</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    Detalhamento de todos os componentes do custo
-                </p>
-                <div class="chart-container chart-container-md">
-                    <canvas id="graficoDistribuicaoPreco"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Linha 2 de Gráficos -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Comparação com Concorrência -->
-            <div class="glass-card p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏆 Comparação com Concorrência</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    Seu preço vs concorrentes no mercado
-                </p>
-                <div class="chart-container chart-container-md">
-                    <canvas id="graficoComparacaoConcorrenciaGraficos"></canvas>
-                </div>
-            </div>
-            
-            <!-- Evolução do Lucro -->
-            <div class="glass-card p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📈 Evolução do Lucro</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    Lucro e faturamento ao longo do tempo
-                </p>
-                <div class="chart-container chart-container-md">
-                    <canvas id="graficoEvolucaoLucro"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Linha 3 de Gráficos -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Ponto de Equilíbrio -->
-            <div class="glass-card p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">⚖️ Ponto de Equilíbrio</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    Quantidade necessária para cobrir custos
-                </p>
-                <div class="chart-container chart-container-md">
-                    <canvas id="graficoPontoEquilibrio"></canvas>
-                </div>
-            </div>
-            
-            <!-- Projeção de Faturamento -->
-            <div class="glass-card p-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🚀 Projeção de Faturamento</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    Previsão de crescimento dos próximos meses
-                </p>
-                <div class="chart-container chart-container-md">
-                    <canvas id="graficoProjecaoFaturamento"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Última linha -->
-        <div class="glass-card p-4">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">💰 Projeção de Lucro</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Expectativa de lucro nos próximos meses
-            </p>
-            <div class="chart-container chart-container-lg">
-                <canvas id="graficoProjecaoLucro"></canvas>
-            </div>
-        </div>
-    </div>
-</section>
+            </section>
 
             <!-- Projeções -->
             <section id="projecoes" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">🚀 Projeções Financeiras</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Projeta o crescimento do seu negócio para os próximos meses com diferentes cenários.</p>
+                    
+                    <!-- Configuração das Projeções -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="input-group">
+                            <label for="horizonteProjecao" class="floating-label">Horizonte de Projeção (meses)</label>
+                            <select id="horizonteProjecao" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="atualizarProjecoes()">
+                                <option value="6">6 meses</option>
+                                <option value="12" selected>12 meses</option>
+                                <option value="18">18 meses</option>
+                                <option value="24">24 meses</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="cenarioBase" class="floating-label">Cenário de Projeção</label>
+                            <select id="cenarioBase" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="atualizarProjecoes()">
+                                <option value="pessimista">Pessimista</option>
+                                <option value="realista" selected>Realista</option>
+                                <option value="otimista">Otimista</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="taxaCrescimentoProjecao" class="floating-label">Taxa de Crescimento (% ao mês)</label>
+                            <input type="number" id="taxaCrescimentoProjecao" value="5" min="0" max="50" step="0.1" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" oninput="atualizarProjecoes()">
+                        </div>
+                    </div>
+                    
+                    <!-- Metas Trimestrais -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Meta 1º Trimestre</div>
+                            <div id="metaTrimestre1" class="text-2xl font-bold text-blue-700 dark:text-blue-400">R$ 0,00</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Faturamento projetado</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Meta 2º Trimestre</div>
+                            <div id="metaTrimestre2" class="text-2xl font-bold text-green-700 dark:text-green-400">R$ 0,00</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Faturamento projetado</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Meta Anual</div>
+                            <div id="metaAnual" class="text-2xl font-bold text-purple-700 dark:text-purple-400">R$ 0,00</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Faturamento projetado</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botão para Atualizar -->
+                    <div class="text-center mb-6">
+                        <button onclick="atualizarProjecoes()" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            <i class="fas fa-sync-alt mr-2"></i> Atualizar Projeções
+                        </button>
+                    </div>
+                    
+                    <!-- Botões de Navegação -->
+                    <div class="flex justify-between mt-8">
+                        <button onclick="openTab('graficos')" 
+                                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg font-medium hover-lift">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                        <button onclick="openTab('recomendacoes')" 
+                                class="px-6 py-3 gradient-primary text-white rounded-lg font-medium hover-lift">
+                            Próximo: Plano de Ação <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
             </section>
 
             <!-- Recomendações -->
             <section id="recomendacoes" class="tab-content" hidden>
-                <!-- Conteúdo anterior mantido -->
-                <!-- ... -->
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">🎯 Plano de Ação Personalizado</h2>
+                    <p class="text-gray-800 dark:text-gray-300 mb-6">Recomendações específicas para otimizar seu negócio baseadas na sua análise.</p>
+                    
+                    <!-- Resumo das Recomendações -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center p-4 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Prioridade Alta</div>
+                            <div id="prioridadeAlta" class="text-2xl font-bold text-red-700 dark:text-red-400">0</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Ações urgentes</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Prioridade Média</div>
+                            <div id="prioridadeMedia" class="text-2xl font-bold text-yellow-700 dark:text-yellow-400">0</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Ações importantes</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Prioridade Baixa</div>
+                            <div id="prioridadeBaixa" class="text-2xl font-bold text-green-700 dark:text-green-400">0</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Melhorias futuras</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
+                            <div class="text-sm text-gray-800 dark:text-gray-300 mb-1">Total de Ações</div>
+                            <div id="totalRecomendacoes" class="text-2xl font-bold text-blue-700 dark:text-blue-400">0</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Recomendações</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Categorias de Recomendações -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- Precificação -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏷️ Precificação</h3>
+                            <ul id="recomendacoesPrecificacao" class="space-y-2">
+                                <li class="flex items-start p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                                    <span class="text-sm text-gray-800 dark:text-gray-300">Complete a análise de precificação para receber recomendações específicas.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Custos -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">💰 Custos</h3>
+                            <ul id="recomendacoesCustos" class="space-y-2">
+                                <li class="flex items-start p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                    <span class="text-sm text-gray-800 dark:text-gray-300">Analise seus custos para receber recomendações de otimização.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Mercado -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏆 Mercado</h3>
+                            <ul id="recomendacoesMercado" class="space-y-2">
+                                <li class="flex items-start p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                                    <i class="fas fa-chart-line text-purple-500 mt-1 mr-3"></i>
+                                    <span class="text-sm text-gray-800 dark:text-gray-300">Complete a análise de mercado para receber recomendações de posicionamento.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Crescimento -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">📈 Crescimento</h3>
+                            <ul id="recomendacoesCrescimento" class="space-y-2">
+                                <li class="flex items-start p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                                    <i class="fas fa-rocket text-orange-500 mt-1 mr-3"></i>
+                                    <span class="text-sm text-gray-800 dark:text-gray-300">Analise as projeções para receber recomendações de crescimento.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Ação Final -->
+                    <div class="text-center p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
+                        <h3 class="text-lg font-bold text-green-900 dark:text-green-300 mb-3">✅ Análise Concluída!</h3>
+                        <p class="text-green-800 dark:text-green-400 mb-4">
+                            Você completou a análise completa do seu negócio. Agora é hora de implementar as recomendações!
+                        </p>
+                        <button onclick="gerarRecomendacoes()" 
+                                class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium hover-lift">
+                            <i class="fas fa-sync-alt mr-2"></i> Gerar Novas Recomendações
+                        </button>
+                    </div>
+                </div>
             </section>
         </div>
     </main>
@@ -1578,18 +1286,16 @@
     <script src="graficos.js"></script>
     
     <script>
-        document.body.classList.add('loaded');
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                fecharModal();
-            }
-        });
-        
-        // Inicializar tooltips
-        document.querySelectorAll('[title]').forEach(element => {
-            element.addEventListener('mouseenter', mostrarTooltip);
-            element.addEventListener('mouseleave', esconderTooltip);
+        // Inicialização do sistema de abas
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM carregado - inicializando sistema de abas...');
+            
+            // Inicializar a primeira aba
+            openTab('dashboard');
+            
+            // Atualizar progresso inicial
+            setTimeout(calcularCustos, 100);
+            setTimeout(atualizarProgresso, 200);
         });
     </script>
 </body>
