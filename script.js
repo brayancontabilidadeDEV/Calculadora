@@ -1,4 +1,5 @@
-// NO INÍCIO DO script.js, APÓS AS VARIÁVEIS GLOBAIS
+// ==================== VARIÁVEIS GLOBAIS ====================
+
 // Garantir que dadosNegocio esteja acessível globalmente
 window.dadosNegocio = {
     empresa: {},
@@ -14,14 +15,9 @@ let dadosNegocio = window.dadosNegocio;
 
 let passoAtualDados = 1;
 let metodoPrecificacaoSelecionado = 'markup';
-}
 
-// Corrigir a função atualizarGraficoComposicao
-function atualizarGraficoComposicao(preco, custoVarUnit, custoFixoUnit, markup) {
-    if (window.gerenciadorGraficos && window.gerenciadorGraficos.atualizarGraficoComposicaoPreco) {
-        window.gerenciadorGraficos.atualizarGraficoComposicaoPreco(preco, custoVarUnit, custoFixoUnit, markup);
-    }
-}
+// ==================== INICIALIZAÇÃO ====================
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Página carregada - iniciando...');
     
@@ -66,19 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Inicialização completa!');
 });
 
-// Variáveis globais
-let dadosNegocio = {
-    empresa: {},
-    produto: {},
-    custos: {},
-    precificacao: {},
-    mercado: {},
-    resultados: {}
-};
-
-let passoAtualDados = 1;
-let metodoPrecificacaoSelecionado = 'markup';
-
 // ==================== FUNÇÕES DE NAVEGAÇÃO ====================
 
 function openTab(tabName) {
@@ -93,13 +76,16 @@ function openTab(tabName) {
     });
     
     // Mostrar tab selecionada
-    document.getElementById(tabName).classList.add('active');
+    const tabElement = document.getElementById(tabName);
+    if (tabElement) {
+        tabElement.classList.add('active');
+    }
     
     // Atualizar botão ativo
-    const tabId = `tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
-    const tabElement = document.getElementById(tabId);
-    if (tabElement) {
-        tabElement.className = 'tab-btn px-4 py-3 rounded-xl font-medium gradient-primary text-white shadow-md hover-lift';
+    const tabId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+    const tabButton = document.getElementById(tabId);
+    if (tabButton) {
+        tabButton.className = 'tab-btn px-4 py-3 rounded-xl font-medium gradient-primary text-white shadow-md hover-lift';
     }
     
     // Atualizar progresso do wizard
@@ -111,7 +97,6 @@ function openTab(tabName) {
     } else if (tabName === 'resultados') {
         calcularResultados();
     } else if (tabName === 'graficos') {
-        // Atualizar gráficos com dados atuais
         setTimeout(() => {
             if (window.gerenciadorGraficos) {
                 window.gerenciadorGraficos.atualizarTodosGraficosComDados();
@@ -139,7 +124,7 @@ function atualizarProgressoWizard(tabAtual) {
     
     const progressBar = document.getElementById('progressBar');
     if (progressBar) {
-        progressBar.style.width = `${progresso[tabAtual] || 0}%`;
+        progressBar.style.width = (progresso[tabAtual] || 0) + '%';
     }
 }
 
@@ -158,8 +143,8 @@ function mostrarPassoDados(passo) {
     });
     
     // Mostrar passo selecionado
-    const conteudoPasso = document.getElementById(`conteudoPassoDados${passo}`);
-    const botaoPasso = document.getElementById(`passoDados${passo}`);
+    const conteudoPasso = document.getElementById('conteudoPassoDados' + passo);
+    const botaoPasso = document.getElementById('passoDados' + passo);
     
     if (conteudoPasso) conteudoPasso.classList.remove('hidden');
     if (botaoPasso) {
@@ -199,32 +184,32 @@ function voltarPassoDados() {
 
 function calcularCustos() {
     // Custos variáveis por unidade
-    const materiaPrima = parseFloat(document.getElementById('materiaPrima').value) || 0;
-    const embalagem = parseFloat(document.getElementById('embalagem').value) || 0;
-    const frete = parseFloat(document.getElementById('frete').value) || 0;
+    const materiaPrima = parseFloat(document.getElementById('materiaPrima')?.value) || 0;
+    const embalagem = parseFloat(document.getElementById('embalagem')?.value) || 0;
+    const frete = parseFloat(document.getElementById('frete')?.value) || 0;
     
     // Percentuais
-    const comissoesPercent = parseFloat(document.getElementById('comissoesPercent').value) || 0;
-    const impostosVenda = parseFloat(document.getElementById('impostosVenda').value) || 0;
-    const taxasPlataforma = parseFloat(document.getElementById('taxasPlataforma').value) || 0;
+    const comissoesPercent = parseFloat(document.getElementById('comissoesPercent')?.value) || 0;
+    const impostosVenda = parseFloat(document.getElementById('impostosVenda')?.value) || 0;
+    const taxasPlataforma = parseFloat(document.getElementById('taxasPlataforma')?.value) || 0;
     
     // Custos fixos mensais
-    const aluguel = parseFloat(document.getElementById('aluguel').value) || 0;
-    const salarios = parseFloat(document.getElementById('salarios').value) || 0;
-    const contas = parseFloat(document.getElementById('contas').value) || 0;
-    const marketing = parseFloat(document.getElementById('marketing').value) || 0;
-    const das = parseFloat(document.getElementById('das').value) || 70.90;
-    const manutencao = parseFloat(document.getElementById('manutencao').value) || 0;
-    const outrosFixos = parseFloat(document.getElementById('outrosFixos').value) || 0;
+    const aluguel = parseFloat(document.getElementById('aluguel')?.value) || 0;
+    const salarios = parseFloat(document.getElementById('salarios')?.value) || 0;
+    const contas = parseFloat(document.getElementById('contas')?.value) || 0;
+    const marketing = parseFloat(document.getElementById('marketing')?.value) || 0;
+    const das = parseFloat(document.getElementById('das')?.value) || 70.90;
+    const manutencao = parseFloat(document.getElementById('manutencao')?.value) || 0;
+    const outrosFixos = parseFloat(document.getElementById('outrosFixos')?.value) || 0;
     
     // Software
-    const softwareGestao = parseFloat(document.getElementById('softwareGestao').value) || 0;
-    const softwareDesign = parseFloat(document.getElementById('softwareDesign').value) || 0;
-    const softwareMarketing = parseFloat(document.getElementById('softwareMarketing').value) || 0;
-    const softwareOutros = parseFloat(document.getElementById('softwareOutros').value) || 0;
+    const softwareGestao = parseFloat(document.getElementById('softwareGestao')?.value) || 0;
+    const softwareDesign = parseFloat(document.getElementById('softwareDesign')?.value) || 0;
+    const softwareMarketing = parseFloat(document.getElementById('softwareMarketing')?.value) || 0;
+    const softwareOutros = parseFloat(document.getElementById('softwareOutros')?.value) || 0;
     
     // Quantidade mensal esperada
-    const qtdMensal = parseFloat(document.getElementById('qtdVendaMensal').value) || 100;
+    const qtdMensal = parseFloat(document.getElementById('qtdVendaMensal')?.value) || 100;
     
     // Cálculos
     const custoVariavelUnitario = materiaPrima + embalagem + frete;
@@ -234,12 +219,12 @@ function calcularCustos() {
     const custoTotalUnitario = custoVariavelUnitario + custoFixoUnitario;
     const custoTotalMensal = custoTotalUnitario * qtdMensal;
     
-    // Calcular percentuais sobre preço (serão aplicados depois)
+    // Calcular percentuais sobre preço
     const percentuaisVenda = (comissoesPercent + impostosVenda + taxasPlataforma) / 100;
     
     // Sugerir markup baseado no setor
     let markupSugerido = 100;
-    const setor = document.getElementById('setorEmpresa').value;
+    const setor = document.getElementById('setorEmpresa')?.value;
     const markupsSetor = {
         'alimentacao': 60,
         'moda': 80,
@@ -266,7 +251,7 @@ function calcularCustos() {
     if (resumoCustoUnitario) resumoCustoUnitario.textContent = formatarMoeda(custoTotalUnitario);
     if (resumoCustoFixo) resumoCustoFixo.textContent = formatarMoeda(custoFixoMensal);
     if (resumoCustoTotal) resumoCustoTotal.textContent = formatarMoeda(custoTotalMensal);
-    if (resumoMarkupSugerido) resumoMarkupSugerido.textContent = `${markupSugerido}%`;
+    if (resumoMarkupSugerido) resumoMarkupSugerido.textContent = markupSugerido + '%';
     
     // Atualizar dados no objeto
     dadosNegocio.custos = {
@@ -285,13 +270,13 @@ function calcularCustos() {
     
     // Atualizar gráfico de distribuição se disponível
     if (window.gerenciadorGraficos) {
-        const preco = parseFloat(document.getElementById('precoVendaFinal').value) || 0;
+        const preco = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
         window.gerenciadorGraficos.atualizarGraficoDistribuicaoPreco(dadosNegocio.custos, preco);
     }
 }
 
 function sugerirCustosPorSetor() {
-    const setor = document.getElementById('setorEmpresa').value;
+    const setor = document.getElementById('setorEmpresa')?.value;
     
     if (!setor) {
         mostrarToast('Selecione um setor primeiro!', 'warning');
@@ -335,20 +320,26 @@ function sugerirCustosPorSetor() {
     
     if (templates[setor]) {
         const template = templates[setor];
-        document.getElementById('materiaPrima').value = template.materiaPrima;
-        document.getElementById('embalagem').value = template.embalagem;
-        document.getElementById('frete').value = template.frete;
-        document.getElementById('aluguel').value = template.aluguel;
-        document.getElementById('salarios').value = template.salarios;
-        document.getElementById('marketing').value = template.marketing;
+        const materiaPrimaEl = document.getElementById('materiaPrima');
+        const embalagemEl = document.getElementById('embalagem');
+        const freteEl = document.getElementById('frete');
+        const aluguelEl = document.getElementById('aluguel');
+        const salariosEl = document.getElementById('salarios');
+        const marketingEl = document.getElementById('marketing');
+        
+        if (materiaPrimaEl) materiaPrimaEl.value = template.materiaPrima;
+        if (embalagemEl) embalagemEl.value = template.embalagem;
+        if (freteEl) freteEl.value = template.frete;
+        if (aluguelEl) aluguelEl.value = template.aluguel;
+        if (salariosEl) salariosEl.value = template.salarios;
+        if (marketingEl) marketingEl.value = template.marketing;
         
         calcularCustos();
-        mostrarToast(`Custos do setor ${setor} aplicados!`, 'success');
+        mostrarToast('Custos do setor ' + setor + ' aplicados!', 'success');
     }
 }
 
 function aplicarTemplateSetor(setor) {
-    // Similar à função acima, mas para os botões rápidos
     const setorSelect = document.getElementById('setorEmpresa');
     if (setorSelect) {
         setorSelect.value = setor;
@@ -381,7 +372,7 @@ function selecionarMetodo(metodo) {
     });
     
     // Mostrar configuração do método selecionado
-    const configElement = document.getElementById(`configMetodo${metodo.charAt(0).toUpperCase() + metodo.slice(1)}`);
+    const configElement = document.getElementById('configMetodo' + metodo.charAt(0).toUpperCase() + metodo.slice(1));
     if (configElement) {
         configElement.style.display = 'block';
     }
@@ -393,11 +384,12 @@ function selecionarMetodo(metodo) {
     }
     
     // Feedback visual
-    mostrarToast(`Método ${nomes[metodo]} selecionado!`, 'success');
+    mostrarToast('Método ' + (nomes[metodo] || metodo) + ' selecionado!', 'success');
     
     // Recalcular precificação
     atualizarPrecificacao();
 }
+
 function atualizarMarkup(valor) {
     const markupSlider = document.getElementById('markupSlider');
     const markupInput = document.getElementById('markupInput');
@@ -461,23 +453,19 @@ function atualizarComposicaoPreco(preco) {
     if (compCustoVarUnit) compCustoVarUnit.textContent = formatarMoeda(custoVarUnit);
     if (compCustoFixoUnit) compCustoFixoUnit.textContent = formatarMoeda(custoFixoUnit);
     if (compCustoTotalUnit) compCustoTotalUnit.textContent = formatarMoeda(custoTotalUnit);
-    if (compMarkupAplicado) compMarkupAplicado.textContent = `${markup.toFixed(1)}%`;
+    if (compMarkupAplicado) compMarkupAplicado.textContent = markup.toFixed(1) + '%';
     if (compPrecoFinal) compPrecoFinal.textContent = formatarMoeda(preco);
     if (lucroPorUnidade) lucroPorUnidade.textContent = formatarMoeda(lucroUnitario);
-    if (margemLucroUnidade) margemLucroUnidade.textContent = `${margemLucro.toFixed(1)}%`;
+    if (margemLucroUnidade) margemLucroUnidade.textContent = margemLucro.toFixed(1) + '%';
     
     // Atualizar gráfico de composição
-    atualizarGraficoComposicao(preco, custoVarUnit, custoFixoUnit, markup);
-}
-
-function atualizarGraficoComposicao(preco, custoVarUnit, custoFixoUnit, markup) {
-    // Esta função será implementada no arquivo graficos.js
-    // Por enquanto, apenas um placeholder
-    console.log('Atualizando gráfico de composição:', { preco, custoVarUnit, custoFixoUnit, markup });
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.atualizarGraficoComposicaoPreco(preco, custoVarUnit, custoFixoUnit, markup);
+    }
 }
 
 function aplicarPrecoPsicologico(tipo) {
-    const precoAtual = parseFloat(document.getElementById('precoVendaFinal').value) || 0;
+    const precoAtual = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
     let novoPreco = precoAtual;
     
     switch(tipo) {
@@ -504,7 +492,7 @@ function aplicarPrecoPsicologico(tipo) {
 
 function atualizarPrecoFinal(valor) {
     const preco = parseFloat(valor) || 0;
-    const descontoPercent = parseFloat(document.getElementById('descontoPromocional').value) || 0;
+    const descontoPercent = parseFloat(document.getElementById('descontoPromocional')?.value) || 0;
     
     // Aplicar desconto se necessário
     const precoComDesconto = preco * (1 - descontoPercent/100);
@@ -543,10 +531,10 @@ function calcularImpactoPreco(preco) {
     const impactoLucroMensal = document.getElementById('impactoLucroMensal');
     const impactoPontoEquilibrio = document.getElementById('impactoPontoEquilibrio');
     
-    if (impactoMargem) impactoMargem.textContent = `${margemLucro.toFixed(1)}%`;
+    if (impactoMargem) impactoMargem.textContent = margemLucro.toFixed(1) + '%';
     if (impactoLucroUnit) impactoLucroUnit.textContent = formatarMoeda(lucroUnitario);
     if (impactoLucroMensal) impactoLucroMensal.textContent = formatarMoeda(lucroMensal);
-    if (impactoPontoEquilibrio) impactoPontoEquilibrio.textContent = `${pontoEquilibrio} unidades`;
+    if (impactoPontoEquilibrio) impactoPontoEquilibrio.textContent = pontoEquilibrio + ' unidades';
     
     // Recomendação
     let recomendacao = '';
@@ -569,17 +557,17 @@ function calcularImpactoPreco(preco) {
     const recomendacaoPreco = document.getElementById('recomendacaoPreco');
     if (recomendacaoPreco) {
         recomendacaoPreco.textContent = recomendacao;
-        recomendacaoPreco.className = `font-bold ${cor}`;
+        recomendacaoPreco.className = 'font-bold ' + cor;
     }
 }
 
 // ==================== FUNÇÕES DA TAB MERCADO ====================
 
 function analisarConcorrencia() {
-    const precoMin = parseFloat(document.getElementById('precoMinConcorrencia').value) || 0;
-    const precoMedio = parseFloat(document.getElementById('precoMedioConcorrencia').value) || 0;
-    const precoMax = parseFloat(document.getElementById('precoMaxConcorrencia').value) || 0;
-    const meuPreco = parseFloat(document.getElementById('precoVendaFinal').value) || 0;
+    const precoMin = parseFloat(document.getElementById('precoMinConcorrencia')?.value) || 0;
+    const precoMedio = parseFloat(document.getElementById('precoMedioConcorrencia')?.value) || 0;
+    const precoMax = parseFloat(document.getElementById('precoMaxConcorrencia')?.value) || 0;
+    const meuPreco = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
     
     if (!precoMin || !precoMedio || !precoMax) {
         mostrarToast('Preencha todos os preços da concorrência!', 'warning');
@@ -588,17 +576,18 @@ function analisarConcorrencia() {
     
     // Calcular posição
     const diferencaMedia = ((meuPreco - precoMedio) / precoMedio) * 100;
-    const posicaoRelativa = ((meuPreco - precoMin) / (precoMax - precoMin)) * 100;
     
     // Atualizar indicadores
     const diferencaMediaElement = document.getElementById('diferencaMedia');
     const espacoAumentoElement = document.getElementById('espacoAumento');
     
-    if (diferencaMediaElement) diferencaMediaElement.textContent = 
-        `${diferencaMedia >= 0 ? '+' : ''}${diferencaMedia.toFixed(1)}%`;
+    if (diferencaMediaElement) {
+        diferencaMediaElement.textContent = (diferencaMedia >= 0 ? '+' : '') + diferencaMedia.toFixed(1) + '%';
+    }
     
-    if (espacoAumentoElement) espacoAumentoElement.textContent = 
-        `${((precoMax - meuPreco) / meuPreco * 100).toFixed(1)}%`;
+    if (espacoAumentoElement) {
+        espacoAumentoElement.textContent = (((precoMax - meuPreco) / meuPreco) * 100).toFixed(1) + '%';
+    }
     
     // Determinar posição
     let posicaoTexto = '';
@@ -613,11 +602,11 @@ function analisarConcorrencia() {
         posicaoTexto = 'Abaixo da média';
         posicaoCor = 'text-orange-600 dark:text-orange-400';
         marcadorPos = 30;
-    } else if (meuPreco <= precoMedio * 1.1) {
+        } else if (meuPreco <= precoMedio * 1.1) {
         posicaoTexto = 'No preço médio';
         posicaoCor = 'text-green-600 dark:text-green-400';
         marcadorPos = 50;
-    } else if (meuPreco < precoMax * 0.9) {
+    } else if (meuPreco <= precoMax * 0.9) {
         posicaoTexto = 'Acima da média';
         posicaoCor = 'text-blue-600 dark:text-blue-400';
         marcadorPos = 70;
@@ -628,749 +617,830 @@ function analisarConcorrencia() {
     }
     
     const posicaoMercadoElement = document.getElementById('posicaoMercado');
-    const marcadorPosicaoElement = document.getElementById('marcadorPosicao');
-    
     if (posicaoMercadoElement) {
         posicaoMercadoElement.textContent = posicaoTexto;
-        posicaoMercadoElement.className = `font-bold ${posicaoCor}`;
+        posicaoMercadoElement.className = 'font-bold ' + posicaoCor;
     }
     
-    if (marcadorPosicaoElement) marcadorPosicaoElement.style.left = `${marcadorPos}%`;
-    
-    // Vantagem competitiva
-    const vantagem = diferencaMedia > 0 ? 'Posicionamento premium' : 
-                   diferencaMedia > -10 ? 'Competitivo' : 'Preço agressivo';
-    const vantagemCompetitivaElement = document.getElementById('vantagemCompetitiva');
-    if (vantagemCompetitivaElement) vantagemCompetitivaElement.textContent = vantagem;
-    
-    // Atualizar gráfico de comparação
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.atualizarGraficoComparacaoConcorrencia();
+    // Atualizar marcador no gráfico
+    const marcadorPosicao = document.getElementById('marcadorPosicao');
+    if (marcadorPosicao) {
+        marcadorPosicao.style.left = marcadorPos + '%';
     }
     
-    // Análise
-    let analise = '';
-    if (diferencaMedia > 15) {
-        analise = 'premium. Considere adicionar mais valor para justificar o preço.';
-    } else if (diferencaMedia > 0) {
-        analise = 'bem posicionado. Você não é o mais barato, mas oferece valor justo.';
-    } else if (diferencaMedia > -10) {
-        analise = 'competitivo. Boa relação preço/valor.';
+    // Recomendação baseada na posição
+    let recomendacao = '';
+    if (meuPreco < precoMin) {
+        recomendacao = 'Seu preço está muito baixo! Aumente para não desvalorizar seu produto.';
+    } else if (meuPreco < precoMedio) {
+        recomendacao = 'Preço competitivo. Você pode considerar um pequeno aumento se seu produto tem diferenciais.';
+    } else if (meuPreco <= precoMedio * 1.15) {
+        recomendacao = 'Preço adequado ao mercado. Mantenha se sua proposta de valor for justificável.';
+    } else if (meuPreco <= precoMax) {
+        recomendacao = 'Preço premium. Certifique-se de que seus diferenciais justificam o valor.';
     } else {
-        analise = 'agressivo. Cuidado com a margem de lucro.';
+        recomendacao = 'Preço acima do mercado. Avalie se há espaço para redução ou se seu produto realmente justifica esse valor.';
     }
     
-    const analisePosicaoElement = document.getElementById('analisePosicao');
-    if (analisePosicaoElement) analisePosicaoElement.textContent = analise;
-    
-    // Valor percebido
-    atualizarValorPercebido();
-}
-
-function atualizarValorPercebido() {
-    const qualidade = parseInt(document.getElementById('valorQualidade').value) || 8;
-    const atendimento = parseInt(document.getElementById('valorAtendimento').value) || 7;
-    const marca = parseInt(document.getElementById('valorMarca').value) || 6;
-    
-    const valorTotal = (qualidade + atendimento + marca) / 3;
-    
-    const valorPercebidoScore = document.getElementById('valorPercebidoScore');
-    if (valorPercebidoScore) valorPercebidoScore.textContent = valorTotal.toFixed(1);
-    
-    // Atualizar círculo de progresso
-    const circle = document.querySelector('.progress-ring__circle');
-    if (circle) {
-        const radius = circle.r.baseVal.value;
-        const circumference = radius * 2 * Math.PI;
-        const offset = circumference - (valorTotal / 10) * circumference;
-        
-        circle.style.strokeDasharray = `${circumference} ${circumference}`;
-        circle.style.strokeDashoffset = offset;
+    const recomendacaoConcorrencia = document.getElementById('recomendacaoConcorrencia');
+    if (recomendacaoConcorrencia) {
+        recomendacaoConcorrencia.textContent = recomendacao;
     }
     
-    // Nível de valor percebido
-    let nivel = '';
-    if (valorTotal >= 8) {
-        nivel = 'Valor Muito Alto';
-    } else if (valorTotal >= 6) {
-        nivel = 'Valor Alto';
-    } else if (valorTotal >= 4) {
-        nivel = 'Valor Médio';
-    } else {
-        nivel = 'Valor Baixo';
-    }
-    
-    const nivelValorPercebido = document.getElementById('nivelValorPercebido');
-    if (nivelValorPercebido) nivelValorPercebido.textContent = nivel;
-    
-    // Comparação e premium permitido
-    const premium = Math.max(0, (valorTotal - 5) * 5);
-    const comparacaoValorPercebido = document.getElementById('comparacaoValorPercebido');
-    const premiumPermitido = document.getElementById('premiumPermitido');
-    
-    if (comparacaoValorPercebido) {
-        comparacaoValorPercebido.textContent = 
-            valorTotal >= 6 ? 'alto' : valorTotal >= 4 ? 'médio' : 'baixo';
-    }
-    
-    if (premiumPermitido) {
-        premiumPermitido.textContent = `${premium.toFixed(0)}-${(premium + 5).toFixed(0)}%`;
-    }
+    // Salvar dados de mercado
+    dadosNegocio.mercado = {
+        precoMin: precoMin,
+        precoMedio: precoMedio,
+        precoMax: precoMax,
+        meuPreco: meuPreco,
+        posicao: posicaoTexto,
+        recomendacao: recomendacao
+    };
 }
 
 // ==================== FUNÇÕES DA TAB RESULTADOS ====================
 
 function calcularResultados() {
+    const preco = parseFloat(document.getElementById('precoVendaFinal')?.value) || 0;
     const custos = dadosNegocio.custos;
-    const meuPreco = parseFloat(document.getElementById('precoVendaFinal').value) || 0;
-    const qtdMensal = custos.qtdMensal || 100;
     
-    if (!meuPreco || !custos.totalUnitario) return;
-    
-    // Cálculos básicos
-    const receitaBruta = meuPreco * qtdMensal;
-    const custoTotal = custos.totalMensal;
-    const lucroBruto = receitaBruta - custoTotal;
-    const margemLucro = (lucroBruto / receitaBruta) * 100;
-    
-    // Impostos e taxas (estimados)
-    const impostos = receitaBruta * 0.07; // 7% estimado
-    const lucroLiquido = lucroBruto - impostos;
-    const margemLiquida = (lucroLiquido / receitaBruta) * 100;
-    
-    // Ponto de equilíbrio
-    const lucroUnitario = meuPreco - custos.totalUnitario;
-    const pontoEquilibrio = Math.ceil(custos.fixoMensal / lucroUnitario);
-    
-    // ROI e Payback (estimados)
-    const investimentoInicial = custos.fixoMensal * 3; // Estimativa
-    const roi = (lucroLiquido * 12 / investimentoInicial) * 100;
-    const payback = investimentoInicial / lucroLiquido;
-    
-    // Atualizar KPIs
-    const kpiFaturamento = document.getElementById('kpiFaturamento');
-    const kpiLucro = document.getElementById('kpiLucro');
-    const kpiMargem = document.getElementById('kpiMargem');
-    const kpiPontoEquilibrio = document.getElementById('kpiPontoEquilibrio');
-    
-    if (kpiFaturamento) kpiFaturamento.textContent = formatarMoeda(receitaBruta);
-    if (kpiLucro) kpiLucro.textContent = formatarMoeda(lucroLiquido);
-    if (kpiMargem) kpiMargem.textContent = `${margemLiquida.toFixed(1)}%`;
-    if (kpiPontoEquilibrio) kpiPontoEquilibrio.textContent = pontoEquilibrio;
-    
-    // Atualizar demonstração de resultados
-    const dresReceitaBruta = document.getElementById('dresReceitaBruta');
-    const dresCustoMercadorias = document.getElementById('dresCustoMercadorias');
-    const dresImpostos = document.getElementById('dresImpostos');
-    const dresLucroLiquido = document.getElementById('dresLucroLiquido');
-    const dresMargemLucro = document.getElementById('dresMargemLucro');
-    const dresLucroUnitario = document.getElementById('dresLucroUnitario');
-    
-    if (dresReceitaBruta) dresReceitaBruta.textContent = formatarMoeda(receitaBruta);
-    if (dresCustoMercadorias) dresCustoMercadorias.textContent = formatarMoeda(custoTotal);
-    if (dresImpostos) dresImpostos.textContent = formatarMoeda(impostos);
-    if (dresLucroLiquido) dresLucroLiquido.textContent = formatarMoeda(lucroLiquido);
-    if (dresMargemLucro) dresMargemLucro.textContent = `${margemLiquida.toFixed(1)}%`;
-    if (dresLucroUnitario) dresLucroUnitario.textContent = formatarMoeda(lucroUnitario);
-    
-    // Rentabilidade
-    const rentabilidadeROI = document.getElementById('rentabilidadeROI');
-    const rentabilidadePayback = document.getElementById('rentabilidadePayback');
-    const rentabilidadeLucroAnual = document.getElementById('rentabilidadeLucroAnual');
-    const rentabilidadeTicketMedio = document.getElementById('rentabilidadeTicketMedio');
-    
-    if (rentabilidadeROI) rentabilidadeROI.textContent = `${roi.toFixed(1)}%`;
-    if (rentabilidadePayback) rentabilidadePayback.textContent = payback.toFixed(1);
-    if (rentabilidadeLucroAnual) rentabilidadeLucroAnual.textContent = formatarMoeda(lucroLiquido * 12);
-    if (rentabilidadeTicketMedio) rentabilidadeTicketMedio.textContent = formatarMoeda(meuPreco);
-    
-    // Análise ponto de equilíbrio
-    const percentualCapacidade = (pontoEquilibrio / qtdMensal) * 100;
-    const analisePontoEquilibrioUn = document.getElementById('analisePontoEquilibrioUn');
-    const analisePontoEquilibrioPercent = document.getElementById('analisePontoEquilibrioPercent');
-    
-    if (analisePontoEquilibrioUn) analisePontoEquilibrioUn.textContent = pontoEquilibrio;
-    if (analisePontoEquilibrioPercent) analisePontoEquilibrioPercent.textContent = `${percentualCapacidade.toFixed(1)}%`;
-    
-    // Atualizar gráficos
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.atualizarTodosGraficosComDados();
+    if (!custos.totalUnitario || preco === 0) {
+        mostrarToast('Complete a precificação primeiro!', 'warning');
+        return;
     }
     
-    // Salvar nos dados
+    // Dados básicos
+    const qtdMensal = custos.qtdMensal || 100;
+    const custoUnitario = custos.totalUnitario;
+    
+    // Cálculos
+    const receitaMensal = preco * qtdMensal;
+    const custoTotalMensal = custoUnitario * qtdMensal;
+    const lucroMensal = receitaMensal - custoTotalMensal;
+    const margemLucro = (lucroMensal / receitaMensal) * 100;
+    
+    const lucroUnitario = preco - custoUnitario;
+    const margemLucroUnitario = (lucroUnitario / preco) * 100;
+    
+    // Ponto de equilíbrio
+    const pontoEquilibrioUnidades = Math.ceil(custos.fixoMensal / lucroUnitario);
+    const pontoEquilibrioValor = pontoEquilibrioUnidades * preco;
+    
+    // ROI e Retorno
+    const investimentoInicial = parseFloat(document.getElementById('investimentoInicial')?.value) || 1000;
+    const roiMensal = (lucroMensal / investimentoInicial) * 100;
+    const mesesRetorno = Math.ceil(investimentoInicial / lucroMensal);
+    
+    // Atualizar indicadores de resultado
+    const indicadores = [
+        { id: 'resultReceitaMensal', value: receitaMensal, prefix: 'R$' },
+        { id: 'resultCustosMensais', value: custoTotalMensal, prefix: 'R$' },
+        { id: 'resultLucroMensal', value: lucroMensal, prefix: 'R$' },
+        { id: 'resultMargemLucro', value: margemLucro, prefix: '', suffix: '%' },
+        { id: 'resultLucroUnitario', value: lucroUnitario, prefix: 'R$' },
+        { id: 'resultMargemUnitario', value: margemLucroUnitario, prefix: '', suffix: '%' },
+        { id: 'resultPontoEquilibrioUnid', value: pontoEquilibrioUnidades, prefix: '', suffix: ' unid.' },
+        { id: 'resultPontoEquilibrioValor', value: pontoEquilibrioValor, prefix: 'R$' },
+        { id: 'resultROI', value: roiMensal, prefix: '', suffix: '%' },
+        { id: 'resultMesesRetorno', value: mesesRetorno, prefix: '', suffix: ' meses' }
+    ];
+    
+    indicadores.forEach(ind => {
+        const element = document.getElementById(ind.id);
+        if (element) {
+            let valorFormatado = '';
+            if (ind.prefix.includes('R$')) {
+                valorFormatado = formatarMoeda(ind.value);
+            } else if (ind.suffix.includes('%')) {
+                valorFormatado = ind.value.toFixed(1) + ind.suffix;
+            } else {
+                valorFormatado = ind.value.toLocaleString('pt-BR') + (ind.suffix || '');
+            }
+            element.textContent = (ind.prefix.includes('R$') ? '' : ind.prefix) + valorFormatado;
+        }
+    });
+    
+    // Avaliação de rentabilidade
+    let avaliacao = '';
+    let avaliacaoCor = '';
+    
+    if (margemLucro < 5) {
+        avaliacao = 'Crítica - Risco de prejuízo';
+        avaliacaoCor = 'text-red-600 dark:text-red-400';
+    } else if (margemLucro < 15) {
+        avaliacao = 'Baixa - Apenas sobrevivência';
+        avaliacaoCor = 'text-orange-600 dark:text-orange-400';
+    } else if (margemLucro < 25) {
+        avaliacao = 'Adequada - Negócio sustentável';
+        avaliacaoCor = 'text-yellow-600 dark:text-yellow-400';
+    } else if (margemLucro < 40) {
+        avaliacao = 'Boa - Rentabilidade saudável';
+        avaliacaoCor = 'text-green-600 dark:text-green-400';
+    } else {
+        avaliacao = 'Excelente - Alta lucratividade';
+        avaliacaoCor = 'text-green-700 dark:text-green-500';
+    }
+    
+    const avaliacaoRentabilidade = document.getElementById('avaliacaoRentabilidade');
+    if (avaliacaoRentabilidade) {
+        avaliacaoRentabilidade.textContent = avaliacao;
+        avaliacaoRentabilidade.className = 'font-bold ' + avaliacaoCor;
+    }
+    
+    // Salvar resultados
     dadosNegocio.resultados = {
-        receitaBruta,
-        custoTotal,
-        lucroLiquido,
-        margemLucro: margemLiquida,
-        pontoEquilibrio,
-        roi,
-        payback
+        receitaMensal: receitaMensal,
+        custoTotalMensal: custoTotalMensal,
+        lucroMensal: lucroMensal,
+        margemLucro: margemLucro,
+        lucroUnitario: lucroUnitario,
+        margemLucroUnitario: margemLucroUnitario,
+        pontoEquilibrioUnidades: pontoEquilibrioUnidades,
+        pontoEquilibrioValor: pontoEquilibrioValor,
+        roiMensal: roiMensal,
+        mesesRetorno: mesesRetorno,
+        avaliacao: avaliacao
     };
+    
+    // Atualizar gráficos se disponíveis
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.atualizarGraficoResultados(dadosNegocio.resultados);
+    }
 }
 
 // ==================== FUNÇÕES DA TAB PROJEÇÕES ====================
 
 function atualizarProjecoes() {
-    const horizonte = parseInt(document.getElementById('horizonteProjecao').value) || 12;
-    const cenario = document.getElementById('cenarioBase').value;
-    const taxaCrescimento = parseFloat(document.getElementById('taxaCrescimentoProjecao').value) || 5;
-    
     const resultados = dadosNegocio.resultados;
-    if (!resultados.receitaBruta) {
+    
+    if (!resultados.receitaMensal) {
         mostrarToast('Calcule os resultados primeiro!', 'warning');
         return;
     }
     
-    // Fatores do cenário
-    const fatores = {
-        'otimista': 1.2,
-        'realista': 1.0,
-        'pessimista': 0.8
+    const meses = 12;
+    const crescimentoMensal = parseFloat(document.getElementById('crescimentoMensal')?.value) || 5;
+    const sazonalidade = document.getElementById('sazonalidade')?.value || 'nenhuma';
+    
+    let receitaMensal = resultados.receitaMensal;
+    let lucroMensal = resultados.lucroMensal;
+    
+    // Fatores de sazonalidade por mês (0-12, sendo 0=jan)
+    const fatoresSazonalidade = {
+        'nenhuma': Array(12).fill(1.0),
+        'natal': [1.0, 0.8, 0.9, 0.9, 1.0, 1.1, 1.2, 1.2, 1.3, 1.5, 2.0, 1.8],
+        'ferias': [0.7, 0.8, 1.0, 1.1, 1.2, 1.3, 0.9, 0.8, 1.0, 1.0, 1.0, 1.0],
+        'moda': [1.2, 1.0, 0.9, 0.8, 0.8, 0.9, 1.0, 1.2, 1.5, 1.3, 1.1, 1.2],
+        'alimentos': [1.1, 1.0, 0.9, 0.9, 1.0, 1.0, 1.1, 1.1, 1.2, 1.2, 1.3, 1.4]
     };
     
-    const fator = fatores[cenario] || 1.0;
+    const fatorSazonal = fatoresSazonalidade[sazonalidade] || fatoresSazonalidade['nenhuma'];
     
-    // Gerar dados de projeção
-    const meses = Array.from({length: horizonte}, (_, i) => `Mês ${i + 1}`);
-    const receitas = [];
-    const lucros = [];
+    // Calcular projeções
+    const labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const projReceita = [];
+    const projLucro = [];
+    const projAcumulado = [];
     
-    let receitaAtual = resultados.receitaBruta * fator;
-    let margemAtual = resultados.margemLucro;
+    let acumulado = 0;
     
-    for (let i = 0; i < horizonte; i++) {
-        receitas.push(receitaAtual);
-        lucros.push(receitaAtual * (margemAtual / 100));
+    for (let i = 0; i < meses; i++) {
+        const fatorCrescimento = Math.pow(1 + crescimentoMensal/100, i);
+        const fatorSazonalMes = fatorSazonal[i];
         
-        // Crescimento composto
-        receitaAtual *= (1 + taxaCrescimento/100);
+        const receitaProj = receitaMensal * fatorCrescimento * fatorSazonalMes;
+        const lucroProj = lucroMensal * fatorCrescimento * fatorSazonalMes;
         
-        // Melhoria gradual da margem (0.1% por mês em cenário otimista)
-        if (cenario === 'otimista') {
-            margemAtual += 0.1;
-        }
+        projReceita.push(receitaProj);
+        projLucro.push(lucroProj);
+        
+        acumulado += lucroProj;
+        projAcumulado.push(acumulado);
     }
     
-    // Atualizar gráficos (implementar em graficos.js)
-    console.log('Atualizando projeções:', { meses, receitas, lucros });
+    // Atualizar totais anuais
+    const receitaAnual = projReceita.reduce((a, b) => a + b, 0);
+    const lucroAnual = projLucro.reduce((a, b) => a + b, 0);
     
-    // Atualizar metas
-    const metaTrimestre1 = document.getElementById('metaTrimestre1');
-    const metaTrimestre2 = document.getElementById('metaTrimestre2');
+    const projReceitaAnual = document.getElementById('projReceitaAnual');
+    const projLucroAnual = document.getElementById('projLucroAnual');
+    const projMediaMensal = document.getElementById('projMediaMensal');
     
-    if (metaTrimestre1) metaTrimestre1.textContent = formatarMoeda(receitas[2]);
-    if (metaTrimestre2) metaTrimestre2.textContent = formatarMoeda(receitas[5]);
+    if (projReceitaAnual) projReceitaAnual.textContent = formatarMoeda(receitaAnual);
+    if (projLucroAnual) projLucroAnual.textContent = formatarMoeda(lucroAnual);
+    if (projMediaMensal) projMediaMensal.textContent = formatarMoeda(lucroAnual / 12);
     
-    // Atualizar resumo
-    const projecaoInicio = document.getElementById('projecaoInicio');
-    const projecaoMeio = document.getElementById('projecaoMeio');
-    const projecaoFim = document.getElementById('projecaoFim');
-    const lucroProjecaoInicio = document.getElementById('lucroProjecaoInicio');
-    const lucroProjecaoMeio = document.getElementById('lucroProjecaoMeio');
-    const lucroProjecaoFim = document.getElementById('lucroProjecaoFim');
+    // Atualizar gráfico de projeções se disponível
+    if (window.gerenciadorGraficos) {
+        window.gerenciadorGraficos.atualizarGraficoProjecoes(labels, projReceita, projLucro, projAcumulado);
+    }
     
-    if (projecaoInicio) projecaoInicio.textContent = formatarMoeda(receitas[0]);
-    if (projecaoMeio) projecaoMeio.textContent = formatarMoeda(receitas[5]);
-    if (projecaoFim) projecaoFim.textContent = formatarMoeda(receitas[receitas.length - 1]);
-    if (lucroProjecaoInicio) lucroProjecaoInicio.textContent = formatarMoeda(lucros[0]);
-    if (lucroProjecaoMeio) lucroProjecaoMeio.textContent = formatarMoeda(lucros[5]);
-    if (lucroProjecaoFim) lucroProjecaoFim.textContent = formatarMoeda(lucros[lucros.length - 1]);
+    // Calcular meta de faturamento
+    calcularMetaFaturamento(receitaAnual);
+}
+
+function calcularMetaFaturamento(receitaAnualProjetada) {
+    const metaInput = document.getElementById('metaFaturamento');
+    if (!metaInput || !metaInput.value) return;
+    
+    const metaAnual = parseFloat(metaInput.value);
+    const percentualAtingimento = (receitaAnualProjetada / metaAnual) * 100;
+    
+    const metaAlcancada = document.getElementById('metaAlcancada');
+    const metaDiferenca = document.getElementById('metaDiferenca');
+    const metaBarra = document.getElementById('metaBarraProgresso');
+    
+    if (metaAlcancada) {
+        metaAlcancada.textContent = percentualAtingimento.toFixed(1) + '%';
+    }
+    
+    if (metaDiferenca) {
+        const diferenca = receitaAnualProjetada - metaAnual;
+        metaDiferenca.textContent = formatarMoeda(diferenca);
+        metaDiferenca.className = 'font-bold ' + (diferenca >= 0 ? 'text-green-600' : 'text-red-600');
+    }
+    
+    if (metaBarra) {
+        metaBarra.style.width = Math.min(100, Math.max(0, percentualAtingimento)) + '%';
+    }
 }
 
 // ==================== FUNÇÕES DA TAB RECOMENDAÇÕES ====================
 
 function gerarRecomendacoes() {
     const resultados = dadosNegocio.resultados;
+    const mercado = dadosNegocio.mercado;
     const custos = dadosNegocio.custos;
     
-    if (!resultados.margemLucro) {
-        mostrarToast('Calcule os resultados primeiro!', 'warning');
+    if (!resultados.lucroMensal) {
+        mostrarToast('Complete todas as etapas primeiro!', 'warning');
         return;
     }
     
-    // Gerar recomendações baseadas nos resultados
-    const recomendacoes = {
-        precificacao: [],
-        custos: [],
-        mercado: [],
-        crescimento: []
-    };
+    let recomendacoes = [];
     
-    // Análise de margem
-    if (resultados.margemLucro < 15) {
-        recomendacoes.precificacao.push(
-            "Aumente o preço em 10-15% para atingir uma margem saudável",
-            "Considere criar versões premium com preço maior"
-        );
-    } else if (resultados.margemLucro > 40) {
-        recomendacoes.precificacao.push(
-            "Sua margem está excelente - mantenha o preço atual",
-            "Considere investir parte do lucro em marketing"
-        );
+    // Recomendação baseada na margem
+    if (resultados.margemLucro < 10) {
+        recomendacoes.push({
+            titulo: '⚠️ Margem de Lucro Baixa',
+            descricao: 'Sua margem de lucro está abaixo de 10%. Considere aumentar o preço ou reduzir custos para garantir sustentabilidade.',
+            acao: 'Aumente o preço em pelo menos 15% ou revise seus custos variáveis.',
+            prioridade: 'alta',
+            icone: 'fas fa-exclamation-triangle'
+        });
+    } else if (resultados.margemLucro < 20) {
+        recomendacoes.push({
+            titulo: '📊 Margem Aperitada',
+            descricao: 'Sua margem está em nível de sobrevivência. Há espaço para melhorias.',
+            acao: 'Busque eficiências operacionais para aumentar a rentabilidade.',
+            prioridade: 'media',
+            icone: 'fas fa-chart-line'
+        });
     }
     
-    // Análise de custos
-    const custoFixoPercent = (custos.fixoMensal / custos.totalMensal) * 100;
-    if (custoFixoPercent > 50) {
-        recomendacoes.custos.push(
-            "Custos fixos muito altos - renegocie aluguel/contratos",
-            "Considere home office para reduzir custos com espaço"
-        );
+    // Recomendação baseada no ponto de equilíbrio
+    if (resultados.pontoEquilibrioUnidades > dadosNegocio.custos.qtdMensal * 0.8) {
+        recomendacoes.push({
+            titulo: '⚖️ Ponto de Equilíbrio Alto',
+            descricao: 'Você precisa vender muito para cobrir custos fixos.',
+            acao: 'Reduza custos fixos ou aumente a margem de contribuição.',
+            prioridade: 'alta',
+            icone: 'fas fa-balance-scale'
+        });
     }
     
-    // Quantidade de recomendações por prioridade
-    const prioridadeAlta = document.getElementById('prioridadeAlta');
-    const prioridadeMedia = document.getElementById('prioridadeMedia');
-    const prioridadeBaixa = document.getElementById('prioridadeBaixa');
+    // Recomendação baseada no mercado
+    if (mercado && mercado.posicao) {
+        if (mercado.posicao.includes('Muito abaixo')) {
+            recomendacoes.push({
+                titulo: '💰 Preço Subvalorizado',
+                descricao: 'Seu preço está muito abaixo da concorrência.',
+                acao: 'Aumente gradualmente o preço para se alinhar ao mercado.',
+                prioridade: 'alta',
+                icone: 'fas fa-money-bill-wave'
+            });
+        } else if (mercado.posicao.includes('Muito acima')) {
+            recomendacoes.push({
+                titulo: '🏷️ Preço Premium',
+                descricao: 'Seu preço está acima do mercado. Isso pode limitar vendas.',
+                acao: 'Destaque seus diferenciais ou considere uma leve redução.',
+                prioridade: 'media',
+                icone: 'fas fa-tag'
+            });
+        }
+    }
     
-    if (prioridadeAlta) prioridadeAlta.textContent = 
-        recomendacoes.precificacao.length + recomendacoes.custos.length;
-    if (prioridadeMedia) prioridadeMedia.textContent = 
-        recomendacoes.mercado.length;
-    if (prioridadeBaixa) prioridadeBaixa.textContent = 
-        recomendacoes.crescimento.length;
+    // Recomendação de eficiência
+    if (custos) {
+        const proporcaoCustosFixos = (custos.fixoMensal / (resultados.receitaMensal || 1)) * 100;
+        if (proporcaoCustosFixos > 40) {
+            recomendacoes.push({
+                titulo: '🏢 Custos Fixos Elevados',
+                descricao: 'Seus custos fixos representam mais de 40% da receita.',
+                acao: 'Avalie terceirizações ou reduções de estrutura.',
+                prioridade: 'media',
+                icone: 'fas fa-building'
+            });
+        }
+    }
     
-    // Atualizar listas
-    atualizarListaRecomendacoes('precificacao', recomendacoes.precificacao);
-    atualizarListaRecomendacoes('custos', recomendacoes.custos);
-    atualizarListaRecomendacoes('mercado', recomendacoes.mercado);
-    atualizarListaRecomendacoes('crescimento', recomendacoes.crescimento);
-}
-
-function atualizarListaRecomendacoes(tipo, itens) {
-    const lista = document.getElementById(`recomendacoes${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
-    if (!lista) return;
+    // Se não houver recomendações críticas
+    if (recomendacoes.length === 0) {
+        recomendacoes.push({
+            titulo: '✅ Situação Satisfatória',
+            descricao: 'Seu negócio apresenta indicadores saudáveis. Continue monitorando!',
+            acao: 'Mantenha o bom trabalho e busque melhorias contínuas.',
+            prioridade: 'baixa',
+            icone: 'fas fa-check-circle'
+        });
+    }
     
-    lista.innerHTML = '';
+    // Ordenar por prioridade
+    const ordemPrioridade = { alta: 1, media: 2, baixa: 3 };
+    recomendacoes.sort((a, b) => ordemPrioridade[a.prioridade] - ordemPrioridade[b.prioridade]);
     
-    itens.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'flex items-start';
-        li.innerHTML = `
-            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-            <span>${item}</span>
-        `;
-        lista.appendChild(li);
-    });
+    // Atualizar lista de recomendações
+    const listaRecomendacoes = document.getElementById('listaRecomendacoes');
+    if (listaRecomendacoes) {
+        listaRecomendacoes.innerHTML = '';
+        
+        recomendacoes.forEach((rec, index) => {
+            const corPrioridade = {
+                alta: 'border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20',
+                media: 'border-l-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20',
+                baixa: 'border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20'
+            };
+            
+            const item = document.createElement('div');
+            item.className = `p-4 rounded-lg ${corPrioridade[rec.prioridade]} mb-4`;
+            item.innerHTML = `
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="${rec.icone} text-lg mt-1 ${rec.prioridade === 'alta' ? 'text-red-600' : rec.prioridade === 'media' ? 'text-yellow-600' : 'text-green-600'}"></i>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <h4 class="font-bold text-gray-900 dark:text-white">${rec.titulo}</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${rec.descricao}</p>
+                        <div class="mt-2 p-2 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Ação recomendada:</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">${rec.acao}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            listaRecomendacoes.appendChild(item);
+        });
+    }
     
-    if (itens.length === 0) {
-        const li = document.createElement('li');
-        li.className = 'flex items-start';
-        li.innerHTML = `
-            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-            <span class="text-gray-500">Nenhuma ação necessária nesta área</span>
-        `;
-        lista.appendChild(li);
+    // Atualizar contador
+    const contadorRecomendacoes = document.getElementById('contadorRecomendacoes');
+    if (contadorRecomendacoes) {
+        contadorRecomendacoes.textContent = `${recomendacoes.length} ${recomendacoes.length === 1 ? 'recomendação' : 'recomendações'}`;
     }
 }
 
-// ==================== FUNÇÕES GERAIS ====================
-
-function calcularTudo() {
-    calcularCustos();
-    calcularResultados();
-    atualizarDashboard();
-    mostrarToast('Todos os cálculos foram atualizados!', 'success');
-}
+// ==================== FUNÇÕES DO DASHBOARD ====================
 
 function atualizarDashboard() {
-    const resultados = dadosNegocio.resultados;
+    // Atualizar resumo
+    atualizarResumoDashboard();
+    
+    // Atualizar próximos passos
+    atualizarProximosPassos();
+    
+    // Atualizar alertas
+    verificarAlertas();
+}
+
+function atualizarResumoDashboard() {
     const custos = dadosNegocio.custos;
-    
-    const dashFaturamento = document.getElementById('dashFaturamento');
-    const dashLucro = document.getElementById('dashLucro');
-    const dashMargem = document.getElementById('dashMargem');
-    const dashPontoEquilibrio = document.getElementById('dashPontoEquilibrio');
-    
-    if (resultados.receitaBruta) {
-        if (dashFaturamento) dashFaturamento.textContent = formatarMoeda(resultados.receitaBruta);
-        if (dashLucro) dashLucro.textContent = formatarMoeda(resultados.lucroLiquido);
-        if (dashMargem) dashMargem.textContent = `${resultados.margemLucro.toFixed(1)}%`;
-        if (dashPontoEquilibrio) dashPontoEquilibrio.textContent = resultados.pontoEquilibrio;
-        
-        // Atualizar gráfico do dashboard
-        atualizarGraficoDashboard();
-    }
-    
-    // Atualizar progresso
-    const progresso = calcularProgresso();
-    const progressoDados = document.getElementById('progressoDados');
-    const progressoBar = document.getElementById('progressoBar');
-    const progressoDadosBar = document.getElementById('progressoDadosBar');
-    
-    if (progressoDados) progressoDados.textContent = `${progresso}%`;
-    if (progressoBar) progressoBar.style.width = `${progresso}%`;
-    if (progressoDadosBar) progressoDadosBar.style.width = `${progresso}%`;
-}
-
-function calcularProgresso() {
-    let progresso = 0;
-    
-    // Verificar dados básicos
-    if (document.getElementById('empresaNome').value) progresso += 10;
-    if (document.getElementById('setorEmpresa').value) progresso += 10;
-    if (document.getElementById('nomeProduto').value) progresso += 10;
-    if (document.getElementById('publicoAlvo').value) progresso += 10;
-    if (parseFloat(document.getElementById('qtdVendaMensal').value) > 0) progresso += 10;
-    
-    // Verificar custos
-    if (parseFloat(document.getElementById('materiaPrima').value) > 0) progresso += 10;
-    if (parseFloat(document.getElementById('salarios').value) > 0) progresso += 10;
-    
-    // Verificar preço
-    if (parseFloat(document.getElementById('precoVendaFinal').value) > 0) progresso += 20;
-    
-    // Verificar mercado
-    if (parseFloat(document.getElementById('precoMedioConcorrencia').value) > 0) progresso += 10;
-    
-    return Math.min(progresso, 100);
-}
-
-function atualizarPrecificacao() {
-    // Atualizar precificação baseada nos custos
-    const markupSugerido = dadosNegocio.custos.markupSugerido || 100;
-    const markupSlider = document.getElementById('markupSlider');
-    const markupInput = document.getElementById('markupInput');
-    
-    if (markupSlider) markupSlider.value = markupSugerido;
-    if (markupInput) markupInput.value = markupSugerido;
-    
-    atualizarMarkup(markupSugerido);
-}
-
-function atualizarGraficoDashboard() {
-    // Implementar gráfico do dashboard
-    const ctx = document.getElementById('dashGraficoResumo');
-    if (!ctx) return;
-    
-    // Destruir gráfico anterior se existir
-    if (window.dashboardChart) {
-        window.dashboardChart.destroy();
-    }
-    
     const resultados = dadosNegocio.resultados;
-    if (!resultados.receitaBruta) return;
     
-    window.dashboardChart = new Chart(ctx.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-            datasets: [{
-                label: 'Faturamento',
-                data: [
-                    resultados.receitaBruta * 0.8,
-                    resultados.receitaBruta * 0.9,
-                    resultados.receitaBruta,
-                    resultados.receitaBruta * 1.1,
-                    resultados.receitaBruta * 1.05,
-                    resultados.receitaBruta * 1.15
-                ],
-                borderColor: 'rgb(59, 130, 246)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                tension: 0.3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+    // Preço sugerido
+    const precoSugerido = document.getElementById('dashboardPrecoSugerido');
+    if (precoSugerido && custos.totalUnitario) {
+        const precoComMarkup = custos.totalUnitario * (1 + (custos.markupSugerido || 100)/100);
+        precoSugerido.textContent = formatarMoeda(precoComMarkup);
+    }
+    
+    // Custo unitário
+    const custoUnitario = document.getElementById('dashboardCustoUnitario');
+    if (custoUnitario && custos.totalUnitario) {
+        custoUnitario.textContent = formatarMoeda(custos.totalUnitario);
+    }
+    
+    // Margem estimada
+    const margemEstimada = document.getElementById('dashboardMargemEstimada');
+    if (margemEstimada && custos.totalUnitario && precoSugerido) {
+        const preco = parseFloat(precoSugerido.textContent.replace('R$', '').replace('.', '').replace(',', '.'));
+        const margem = ((preco - custos.totalUnitario) / preco) * 100;
+        margemEstimada.textContent = margem.toFixed(1) + '%';
+    }
+    
+    // Lucro mensal estimado
+    const lucroMensalEstimado = document.getElementById('dashboardLucroMensalEstimado');
+    if (lucroMensalEstimado && custos.totalUnitario && custos.qtdMensal && precoSugerido) {
+        const preco = parseFloat(precoSugerido.textContent.replace('R$', '').replace('.', '').replace(',', '.'));
+        const lucroUnitario = preco - custos.totalUnitario;
+        const lucroMensal = lucroUnitario * custos.qtdMensal;
+        lucroMensalEstimado.textContent = formatarMoeda(lucroMensal);
+    }
 }
 
-// ==================== FUNÇÕES DE UTILIDADE ====================
+function atualizarProximosPassos() {
+    const passos = [];
+    
+    // Verificar se cada etapa está completa
+    if (!dadosNegocio.empresa.nome) {
+        passos.push({
+            icone: 'fas fa-building',
+            texto: 'Complete os dados da empresa',
+            tab: 'dados',
+            concluido: false
+        });
+    }
+    
+    if (!dadosNegocio.custos.totalUnitario) {
+        passos.push({
+            icone: 'fas fa-calculator',
+            texto: 'Configure os custos do produto',
+            tab: 'custos',
+            concluido: false
+        });
+    } else {
+        passos.push({
+            icone: 'fas fa-calculator',
+            texto: 'Custos configurados ✓',
+            tab: 'custos',
+            concluido: true
+        });
+    }
+    
+    if (!document.getElementById('precoVendaFinal')?.value) {
+        passos.push({
+            icone: 'fas fa-tag',
+            texto: 'Defina o preço de venda',
+            tab: 'precificacao',
+            concluido: false
+        });
+    }
+    
+    if (!dadosNegocio.mercado.precoMedio) {
+        passos.push({
+            icone: 'fas fa-chart-bar',
+            texto: 'Analise a concorrência',
+            tab: 'mercado',
+            concluido: false
+        });
+    }
+    
+    // Atualizar lista
+    const listaPassos = document.getElementById('proximosPassosLista');
+    if (listaPassos) {
+        listaPassos.innerHTML = '';
+        
+        passos.forEach((passo, index) => {
+            const item = document.createElement('li');
+            item.className = 'flex items-center mb-3';
+            item.innerHTML = `
+                <i class="${passo.icone} ${passo.concluido ? 'text-green-500' : 'text-blue-500'} mr-3"></i>
+                <span class="flex-1 ${passo.concluido ? 'text-gray-500 line-through' : 'text-gray-700 dark:text-gray-300'}">
+                    ${passo.texto}
+                </span>
+                ${!passo.concluido ? 
+                    `<button onclick="openTab('${passo.tab}')" class="text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-1 rounded hover:bg-blue-200 dark:hover:bg-blue-800">
+                        Ir
+                    </button>` : 
+                    `<i class="fas fa-check text-green-500"></i>`
+                }
+            `;
+            listaPassos.appendChild(item);
+        });
+    }
+}
+
+function verificarAlertas() {
+    const alertas = document.getElementById('alertasDashboard');
+    if (!alertas) return;
+    
+    let alertasHTML = '';
+    
+    // Verificar custos não preenchidos
+    if (!dadosNegocio.custos.totalUnitario) {
+        alertasHTML += `
+            <div class="p-4 mb-3 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                            <strong>Custos não configurados</strong> - Complete a análise de custos para uma precificação precisa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Verificar margem muito baixa
+    const resultados = dadosNegocio.resultados;
+    if (resultados && resultados.margemLucro < 10) {
+        alertasHTML += `
+            <div class="p-4 mb-3 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700 dark:text-red-300">
+                            <strong>Margem de lucro baixa</strong> - Sua margem está abaixo de 10%. Considere revisar preços ou custos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (alertasHTML === '') {
+        alertasHTML = `
+            <div class="p-4 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700 dark:text-green-300">
+                            <strong>Tudo em ordem!</strong> - Não há alertas críticos no momento.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    alertas.innerHTML = alertasHTML;
+}
+
+// ==================== FUNÇÕES UTILITÁRIAS ====================
 
 function formatarMoeda(valor) {
-    return 'R$ ' + parseFloat(valor || 0).toLocaleString('pt-BR', {
+    if (isNaN(valor)) return 'R$ 0,00';
+    return 'R$ ' + valor.toLocaleString('pt-BR', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 }
 
-function mostrarToast(mensagem, tipo) {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
+function mostrarToast(mensagem, tipo = 'info') {
+    // Tipos: success, error, warning, info
+    const toast = document.createElement('div');
+    toast.className = `toast-notification fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0`;
     
-    toast.textContent = mensagem;
-    
-    // Cor baseada no tipo
     const cores = {
-        'success': 'bg-green-600',
-        'error': 'bg-red-600',
-        'warning': 'bg-yellow-600',
-        'info': 'bg-blue-600'
+        success: 'bg-green-500 text-white',
+        error: 'bg-red-500 text-white',
+        warning: 'bg-yellow-500 text-white',
+        info: 'bg-blue-500 text-white'
     };
     
-    toast.className = `toast ${cores[tipo] || 'bg-blue-600'}`;
-    toast.style.display = 'block';
+    toast.className += ` ${cores[tipo]}`;
+    toast.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : tipo === 'warning' ? 'exclamation-triangle' : 'info-circle'} mr-2"></i>
+            <span>${mensagem}</span>
+        </div>
+    `;
     
+    document.body.appendChild(toast);
+    
+    // Mostrar
     setTimeout(() => {
-        toast.style.display = 'none';
+        toast.classList.remove('translate-x-full', 'opacity-0');
+        toast.classList.add('translate-x-0', 'opacity-100');
+    }, 10);
+    
+    // Esconder após 3 segundos
+    setTimeout(() => {
+        toast.classList.remove('translate-x-0', 'opacity-100');
+        toast.classList.add('translate-x-full', 'opacity-0');
+        
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
     }, 3000);
 }
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const icon = document.getElementById('darkModeIcon');
-    if (!icon) return;
+function inicializarEventos() {
+    // Atualizar custos quando inputs mudam
+    document.querySelectorAll('#tabCustos input').forEach(input => {
+        input.addEventListener('input', calcularCustos);
+    });
     
-    if (document.body.classList.contains('dark-mode')) {
-        icon.className = 'fas fa-sun';
-        localStorage.setItem('darkMode', 'enabled');
-    } else {
-        icon.className = 'fas fa-moon';
-        localStorage.setItem('darkMode', 'disabled');
+    // Atualizar precificação quando inputs mudam
+    document.querySelectorAll('#tabPrecificacao input').forEach(input => {
+        input.addEventListener('input', () => {
+            atualizarPrecoFinal(document.getElementById('precoVendaFinal')?.value);
+        });
+    });
+    
+    // Markup slider
+    const markupSlider = document.getElementById('markupSlider');
+    if (markupSlider) {
+        markupSlider.addEventListener('input', function() {
+            atualizarMarkup(this.value);
+        });
+    }
+    
+    // Markup input
+    const markupInput = document.getElementById('markupInput');
+    if (markupInput) {
+        markupInput.addEventListener('input', function() {
+            atualizarMarkup(this.value);
+        });
+    }
+    
+    // Botão de salvar
+    const btnSalvar = document.getElementById('btnSalvarDados');
+    if (btnSalvar) {
+        btnSalvar.addEventListener('click', salvarDados);
+    }
+    
+    // Botão de exportar
+    const btnExportar = document.getElementById('btnExportarDados');
+    if (btnExportar) {
+        btnExportar.addEventListener('click', exportarDados);
+    }
+    
+    // Botão de imprimir
+    const btnImprimir = document.getElementById('btnImprimirRelatorio');
+    if (btnImprimir) {
+        btnImprimir.addEventListener('click', imprimirRelatorio);
+    }
+}
+
+function salvarDados() {
+    try {
+        // Coletar todos os dados
+        const dadosParaSalvar = {
+            dadosNegocio: dadosNegocio,
+            timestamp: new Date().toISOString(),
+            versao: '1.0'
+        };
+        
+        localStorage.setItem('precificaAIDados', JSON.stringify(dadosParaSalvar));
+        mostrarToast('Dados salvos com sucesso!', 'success');
+        
+        return true;
+    } catch (error) {
+        console.error('Erro ao salvar dados:', error);
+        mostrarToast('Erro ao salvar dados', 'error');
+        return false;
     }
 }
 
 function carregarDadosSalvos() {
-    // Carregar modo dark
-    if (localStorage.getItem('darkMode') === 'enabled') {
-        document.body.classList.add('dark-mode');
-        const darkModeIcon = document.getElementById('darkModeIcon');
-        if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+    try {
+        const dadosSalvos = localStorage.getItem('precificaAIDados');
+        if (!dadosSalvos) return false;
+        
+        const dados = JSON.parse(dadosSalvos);
+        
+        // Atualizar dadosNegocio
+        if (dados.dadosNegocio) {
+            Object.assign(dadosNegocio, dados.dadosNegocio);
+            
+            // Atualizar inputs com dados salvos
+            atualizarInputsComDadosSalvos();
+            
+            // Recalcular
+            calcularCustos();
+            atualizarDashboard();
+            
+            mostrarToast('Dados carregados com sucesso!', 'success');
+            return true;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
     }
     
-    // Carregar dados salvos
-    const dados = localStorage.getItem('dadosNegocio');
-    if (dados) {
-        dadosNegocio = JSON.parse(dados);
-        // Preencher campos do formulário com dados salvos
-        // Implementar conforme necessário
+    return false;
+}
+
+function atualizarInputsComDadosSalvos() {
+    // Esta função precisaria ser expandida para atualizar todos os inputs
+    // com base nos dados salvos em dadosNegocio
+    // Por enquanto, é apenas um placeholder
+}
+
+function exportarDados() {
+    try {
+        const dados = {
+            dadosNegocio: dadosNegocio,
+            exportacao: new Date().toISOString(),
+            relatorio: 'Precifica.AI - Relatório de Precificação'
+        };
+        
+        const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `precifica-ai-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        URL.revokeObjectURL(url);
+        
+        mostrarToast('Dados exportados com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao exportar dados:', error);
+        mostrarToast('Erro ao exportar dados', 'error');
     }
 }
 
-function saveProgress() {
-    // Salvar dados nos objetos
-    dadosNegocio.empresa = {
-        nome: document.getElementById('empresaNome').value,
-        cnpj: document.getElementById('empresaCnpj').value,
-        setor: document.getElementById('setorEmpresa').value,
-        tempoMercado: document.getElementById('tempoMercado').value
-    };
+function imprimirRelatorio() {
+    window.print();
+}
+
+function atualizarProgresso() {
+    // Calcular progresso geral baseado em etapas completas
+    const etapas = ['empresa', 'produto', 'custos', 'precificacao', 'mercado', 'resultados'];
+    let completas = 0;
     
-    dadosNegocio.produto = {
-        nome: document.getElementById('nomeProduto').value,
-        categoria: document.getElementById('categoriaProduto').value,
-        descricao: document.getElementById('descricaoProduto').value,
-        unidade: document.getElementById('unidadeMedida').value
-    };
+    if (dadosNegocio.empresa.nome) completas++;
+    if (dadosNegocio.produto.nome) completas++;
+    if (dadosNegocio.custos.totalUnitario) completas++;
+    if (document.getElementById('precoVendaFinal')?.value) completas++;
+    if (dadosNegocio.mercado.precoMedio) completas++;
+    if (dadosNegocio.resultados.lucroMensal) completas++;
     
-    // Salvar no localStorage
-    localStorage.setItem('dadosNegocio', JSON.stringify(dadosNegocio));
+    const progresso = Math.round((completas / etapas.length) * 100);
+    const progressoElement = document.getElementById('progressoGeral');
     
-    mostrarToast('Progresso salvo com sucesso!', 'success');
-}
-
-function salvarRascunho() {
-    saveProgress();
-}
-
-function exportToExcel() {
-    // Implementar exportação para Excel
-    mostrarToast('Exportação para Excel em desenvolvimento!', 'info');
-}
-
-function gerarRelatorioCompleto() {
-    // Implementar geração de relatório PDF
-    mostrarToast('Geração de relatório PDF em desenvolvimento!', 'info');
-}
-
-function resetarCalculadora() {
-    if (confirm('Tem certeza que deseja reiniciar a calculadora? Todos os dados serão perdidos.')) {
-        localStorage.removeItem('dadosNegocio');
-        location.reload();
+    if (progressoElement) {
+        progressoElement.textContent = `${progresso}% completo`;
+        
+        const barra = progressoElement.querySelector('.progresso-barra');
+        if (barra) {
+            barra.style.width = `${progresso}%`;
+        }
     }
 }
+
+// ==================== FUNÇÕES DE TOOLTIP ====================
 
 function mostrarTooltip(event) {
-    const tooltip = event.target.getAttribute('data-tooltip');
+    const tooltip = event.currentTarget.querySelector('.tooltip');
     if (tooltip) {
-        // Criar tooltip
-        const tooltipEl = document.createElement('div');
-        tooltipEl.className = 'tooltip-content';
-        tooltipEl.textContent = tooltip;
-        tooltipEl.style.position = 'absolute';
-        tooltipEl.style.left = `${event.clientX}px`;
-        tooltipEl.style.top = `${event.clientY}px`;
-        document.body.appendChild(tooltipEl);
-        
-        // Remover depois de 3 segundos
-        setTimeout(() => {
-            if (tooltipEl.parentNode) {
-                tooltipEl.parentNode.removeChild(tooltipEl);
-            }
-        }, 3000);
+        tooltip.classList.remove('hidden');
+        tooltip.classList.add('block');
     }
 }
 
-function esconderTooltip() {
-    const tooltips = document.querySelectorAll('.tooltip-content');
-    tooltips.forEach(tooltip => {
-        if (tooltip.parentNode) {
-            tooltip.parentNode.removeChild(tooltip);
-        }
-    });
-}
-
-function abrirModalGrafico(tipo) {
-    const modal = document.getElementById('modalGrafico');
-    const modalTitulo = document.getElementById('modalTitulo');
-    
-    if (!modal || !modalTitulo) return;
-    
-    modal.style.display = 'flex';
-    modalTitulo.textContent = tipo.charAt(0).toUpperCase() + tipo.slice(1).replace('-', ' ');
-    
-    // Aqui você criaria o gráfico no modal baseado no tipo
-    // Por enquanto, vamos apenas mostrar um exemplo
-    const ctx = document.getElementById('modalCanvas');
-    if (!ctx) return;
-    
-    // Destruir gráfico anterior se existir
-    if (window.modalChart) {
-        window.modalChart.destroy();
-    }
-    
-    // Criar novo gráfico (exemplo)
-    window.modalChart = new Chart(ctx.getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
-            datasets: [{
-                label: 'Faturamento',
-                data: [12000, 19000, 15000, 25000, 22000, 30000],
-                backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                borderColor: 'rgb(59, 130, 246)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-function fecharModal() {
-    const modal = document.getElementById('modalGrafico');
-    if (modal) modal.style.display = 'none';
-    
-    if (window.modalChart) {
-        window.modalChart.destroy();
-        window.modalChart = null;
+function esconderTooltip(event) {
+    const tooltip = event.currentTarget.querySelector('.tooltip');
+    if (tooltip) {
+        tooltip.classList.add('hidden');
+        tooltip.classList.remove('block');
     }
 }
 
-// ==================== FUNÇÕES DE GRÁFICOS (PARA O ARQUIVO GRAFICOS.JS) ====================
+// ==================== EXPORTAÇÃO DE FUNÇÕES ====================
 
-function atualizarTodosGraficosComDados() {
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.atualizarTodosGraficosComDados();
-    }
-}
-
-function exportarTodosGraficos() {
-    if (window.gerenciadorGraficos) {
-        window.gerenciadorGraficos.exportarTodosGraficos();
-    }
-}
-
-function exportarGraficoParaImagem(idGrafico, nomeArquivo) {
-    if (window.gerenciadorGraficos && window.gerenciadorGraficos.exportarGraficoParaImagem) {
-        window.gerenciadorGraficos.exportarGraficoParaImagem(idGrafico, nomeArquivo);
-    }
-}
-
-// ==================== INICIALIZAÇÃO DE EVENTOS ====================
-
-function inicializarEventos() {
-    // Atualizar valor percebido quando sliders mudam
-    const valorQualidade = document.getElementById('valorQualidade');
-    const valorAtendimento = document.getElementById('valorAtendimento');
-    const valorMarca = document.getElementById('valorMarca');
-    
-    if (valorQualidade) valorQualidade.addEventListener('input', atualizarValorPercebido);
-    if (valorAtendimento) valorAtendimento.addEventListener('input', atualizarValorPercebido);
-    if (valorMarca) valorMarca.addEventListener('input', atualizarValorPercebido);
-    
-    // Auto-save ao mudar dados
-    document.querySelectorAll('#dados input, #dados select').forEach(element => {
-        element.addEventListener('change', saveProgress);
-    });
-    
-    // Calcular custos ao mudar valores
-    document.querySelectorAll('#custos input').forEach(element => {
-        element.addEventListener('input', calcularCustos);
-    });
-    
-    // Aplicar dark mode se configurado
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark-mode');
-        const darkModeIcon = document.getElementById('darkModeIcon');
-        if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
-    }
-    
-    // Inicializar primeiro passo
-    mostrarPassoDados(1);
-}
-
-// Atualizar progresso quando campos são alterados
-function atualizarProgresso() {
-    const progresso = calcularProgresso();
-    const progressoDados = document.getElementById('progressoDados');
-    const progressoBar = document.getElementById('progressoBar');
-    const progressoDadosBar = document.getElementById('progressoDadosBar');
-    
-    if (progressoDados) progressoDados.textContent = `${progresso}%`;
-    if (progressoBar) progressoBar.style.width = `${progresso}%`;
-    if (progressoDadosBar) progressoDadosBar.style.width = `${progresso}%`;
-}
-
-// ==================== EXPOSIÇÃO GLOBAL DE FUNÇÕES ====================
-
-// Expor dadosNegocio globalmente (garantia adicional)
-window.dadosNegocio = dadosNegocio;
-
-// Expor todas as funções necessárias globalmente
-window.calcularCustos = calcularCustos;
-window.calcularResultados = calcularResultados;
-window.calcularTudo = calcularTudo;
+// Tornar funções essenciais disponíveis globalmente
 window.openTab = openTab;
-window.toggleDarkMode = toggleDarkMode;
-window.saveProgress = saveProgress;
-window.salvarRascunho = salvarRascunho;
-window.analisarConcorrencia = analisarConcorrencia;
-window.atualizarValorPercebido = atualizarValorPercebido;
-window.exportarTodosGraficos = exportarTodosGraficos;
-window.atualizarTodosGraficosComDados = atualizarTodosGraficosComDados;
-window.exportarGraficoParaImagem = exportarGraficoParaImagem;
-window.abrirModalGrafico = abrirModalGrafico;
-window.fecharModal = fecharModal;
 window.mostrarPassoDados = mostrarPassoDados;
 window.avancarPassoDados = avancarPassoDados;
 window.voltarPassoDados = voltarPassoDados;
+window.calcularCustos = calcularCustos;
 window.sugerirCustosPorSetor = sugerirCustosPorSetor;
 window.aplicarTemplateSetor = aplicarTemplateSetor;
 window.selecionarMetodo = selecionarMetodo;
 window.atualizarMarkup = atualizarMarkup;
 window.aplicarPrecoPsicologico = aplicarPrecoPsicologico;
 window.atualizarPrecoFinal = atualizarPrecoFinal;
+window.analisarConcorrencia = analisarConcorrencia;
+window.calcularResultados = calcularResultados;
 window.atualizarProjecoes = atualizarProjecoes;
+window.calcularMetaFaturamento = calcularMetaFaturamento;
 window.gerarRecomendacoes = gerarRecomendacoes;
-window.exportToExcel = exportToExcel;
-window.gerarRelatorioCompleto = gerarRelatorioCompleto;
-window.resetarCalculadora = resetarCalculadora;
 
-console.log('✅ Funções expostas globalmente');
+// Expor para uso em outros arquivos
+window.formatarMoeda = formatarMoeda;
+window.mostrarToast = mostrarToast;
+window.salvarDados = salvarDados;
 
+console.log('✅ Script principal carregado e pronto!');
+
+// Inicialização automática quando DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📊 Precifica.AI inicializado!');
+    });
+} else {
+    console.log('📊 Precifica.AI já inicializado!');
+}
